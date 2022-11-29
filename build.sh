@@ -1,2 +1,2 @@
-rm fans.zip
-cd fans && zip -r ../fans.zip *
+rm html/fans.zip
+cd html/fans && zip -r ../fans.zip *
