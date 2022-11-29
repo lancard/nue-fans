@@ -76,6 +76,7 @@
             <option value="N">N</option>
             <option value="Y">Y</option>
         </select>
+        QNH: <input type="text" id="stationQNH" size="4" value="1013">
         CALLSIGN: <input type="text" id="vatsimCallsign">
     </div>
 
@@ -90,14 +91,13 @@
         var gpsAltitude = 0;
         var fixToCoordMap = {};
         var airwayUsedFix = {};
-        var stationQNH = 1013;
 
         function getIndicatedAltitude(mb, qnh) {
             return 145366.45 * (Math.pow(qnh / 1013.25, 0.190284) - Math.pow(mb / 1013.25, 0.190284))
         }
 
         function onSuccess(values) {
-            const altitude = getIndicatedAltitude(values, stationQNH);
+            const altitude = getIndicatedAltitude(values, $("#stationQNH").val());
             $("#status").text(`${altitude.toFixed(2)}ft(${(0.3048 * altitude).toFixed(2)}m) / ${gpsAltitude.toFixed(2)}m`);
         };
 
@@ -318,15 +318,6 @@
         }
 
         function init() {
-            $.getJSON('../metar.json', function (ret) {
-                var metarItems = ret.RKSS.metar.split(" ");
-                metarItems.forEach(element => {
-                    if (element.indexOf("Q") == 0 && element.length == 5) {
-                        stationQNH = +element.substr(1)
-                    }
-                });
-            });
-
             map = L.map('map',
                 {
                     center: [37.55748666666666, 126.79195416666667],
