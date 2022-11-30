@@ -33,14 +33,11 @@
 
             window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry) {
                 dirEntry.getFile(fileName, { create: true }, function (targetFile) {
-                    console.log("A:" + targetFile.toURL());
                     var downloader = new BackgroundTransfer.BackgroundDownloader();
                     var download = downloader.createDownload(uriString, targetFile);
                     download.startAsync().then(onSuccess, onError, onProgress);
                 });
             });
-
-            console.dir(zip.unzip);
         }
 
     </script>
