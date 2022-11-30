@@ -7,30 +7,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Nue FANS</title>
     <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="jquery-3.6.1.min.js"></script>
     <script src='cordova.js'></script>
     <script>
         document.addEventListener("deviceready", function () {
         });
 
+        function onSuccess() {
+            alert('done!');
+        }
+
+        function onError(err) {
+            console.dir(err);
+            alert(err);
+        }
+
+        function onProgress(progress) {
+            var percent_string = (100 * progress.bytesReceived / progress.totalBytesToReceive) + '%';
+            console.log(percent_string);
+        }
+
         function updateResources() {
-            var downloader = new download();
+            var fileName = "fans.zip";
+            var uriString = "https://fans.mywire.org/fans.zip";
 
-            downloader.Initialize({
-                fileSystem: cordova.file.dataDirectory,
-                folder: "fans",
-                unzip: true,
-                remove: true,
-                timeout: 0,
-                success: function () {
-                    alert('update success!');
-                },
-                error: function (err) {
-                    console.dir(err);
-                    alert(err);
-                }
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+                fileSystem.root.getFile(fileName, { create: true }, function (targetFile) {
+                    console.log("A:" + targetFile.toURL());
+                    var downloader = new BackgroundTransfer.BackgroundDownloader();
+                    var download = downloader.createDownload(uriString, targetFile);
+                    app.downloadPromise = download.startAsync().then(onSuccess, onError, onProgress);
+                });
             });
-
-            downloader.Get("https://fans.mywire.org/fans.zip");
         }
 
     </script>
