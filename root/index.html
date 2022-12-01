@@ -8,37 +8,40 @@
     <title>Welcome to Nue FANS</title>
     <link rel="stylesheet" href="bootstrap.min.css">
     <script src="jquery-3.6.1.min.js"></script>
-    <script src='cordova.js'></script>
+    <script src='/cordova.js'></script>
     <script>
+        const fileName = "fans.zip";
+        const unzippedDirectory = "fans";
+        const downloadGithubUriString = "https://github.com/lancard/nue-fans/releases/latest/download/fans.zip";
+
         var downloader = null;
+        var storageUri = "";
+
         document.addEventListener("deviceready", function () {
             downloader = new BackgroundTransfer.BackgroundDownloader();
+
+            window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry) {
+                storageUri = dirEntry.nativeURL;
+            });
         });
 
-        function onSuccess() {
-            alert('done!');
+        function onDownloadSuccess() {
+            zip.unzip(storageUri + fileName, storageUri + unzippedDirectory, function (status) { console.dir(status) });
         }
 
-        function onError(err) {
+        function onDownloadError(err) {
             console.dir(err);
             alert(err);
         }
 
-        function onProgress(progress) {
+        function onDownloadProgress(progress) {
             var percent_string = (100 * progress.bytesReceived / progress.totalBytesToReceive) + '%';
             console.log(percent_string);
         }
 
         function updateResources() {
-            var fileName = 'fans.zip';
-            var uriString = "https://github.com/lancard/nue-fans/releases/latest/download/fans.zip";
-
-            window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry) {
-                dirEntry.getFile(fileName, { create: true }, function (targetFile) {
-                    var download = downloader.createDownload(uriString, targetFile.nativeURL);
-                    download.startAsync().then(onSuccess, onError, onProgress);
-                });
-            });
+            var download = downloader.createDownload(downloadGithubUriString, storageUri + fileName);
+            download.startAsync().then(onDownloadSuccess, onDownloadError, onDownloadProgress);
         }
 
     </script>
@@ -47,7 +50,7 @@
 <body>
     <div class="container">
         <h1>Welcome Nue FANS</h1>
-        <h4>- Nue Free Aviation Navigation System -</h4>
+        <h6>(Free Aviation Navigation System)</h6>
 
         <div class="card border-success mb-3">
             <div class="card-header bg-success text-white">Start!</div>
