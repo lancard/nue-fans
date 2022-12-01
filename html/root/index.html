@@ -10,7 +10,9 @@
     <script src="jquery-3.6.1.min.js"></script>
     <script src='cordova.js'></script>
     <script>
+        var downloader = null;
         document.addEventListener("deviceready", function () {
+            downloader = new BackgroundTransfer.BackgroundDownloader();
         });
 
         function onSuccess() {
@@ -28,13 +30,12 @@
         }
 
         function updateResources() {
-            var fileName = "fans.zip";
+            var targetFile = 'fans.zip';
             var uriString = "https://fans.mywire.org/fans.zip";
 
             window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry) {
                 dirEntry.getFile(fileName, { create: true }, function (targetFile) {
-                    var downloader = new BackgroundTransfer.BackgroundDownloader();
-                    var download = downloader.createDownload(uriString, targetFile);
+                    var download = downloader.createDownload(uriString, targetFile.nativeURL);
                     download.startAsync().then(onSuccess, onError, onProgress);
                 });
             });
