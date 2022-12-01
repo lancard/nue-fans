@@ -10,11 +10,8 @@ jobs:
    steps:
      - checkout
      - run:
-          name: generate build date
-          command: BUILD_DATE=`date "+%Y-%m-%d %H:%M:%S"`
-     - run:
           name: generate version file
-          command: echo $BUILD_DATE
+          command: BUILD_DATE=`date "+%Y-%m-%d %H:%M:%S"` && echo $BUILD_DATE > fans/version.txt
      - run:
           name: get tiles
           command: git clone --depth=1 --branch main https://github.com/lancard/korea-openstreetmap-tiles.git fans/tiles
