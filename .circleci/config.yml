@@ -1,0 +1,29 @@
+version: 2.1
+
+orbs:
+  gh: circleci/github-cli@2.1.1
+
+jobs:
+ build:
+   machine:
+    image: ubuntu-2204:2022.04.2
+   steps:
+     - checkout
+     - run:
+          name: generate build date
+          command: BUILD_DATE=`date "+%Y-%m-%d %H:%M:%S"`
+     - run:
+          name: generate version file
+          command: echo $BUILD_DATE > fans/version.txt
+     - run:
+          name: get tiles
+          command: git clone --depth=1 --branch main https://github.com/lancard/korea-openstreetmap-tiles.git fans/tiles
+     - run:
+          name: remove unnecessary files
+          command: rm fans/tiles/clear.sh fans/tiles/index.js fans/tiles/README.md
+     - run:
+          name: compress to zip
+          command: cd fans && zip -r ../fans.zip *
+     - run:
+          name: release zip
+          command: VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"` && gh release create $VERSION_STRING fans.zip
