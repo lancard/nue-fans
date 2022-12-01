@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  gh: circleci/github-cli@2.1.1
+  
 jobs:
  build:
     docker:
@@ -18,6 +21,7 @@ jobs:
      - run:
           name: compress to zip
           command: cd fans && zip -r ../fans.zip *
+     - gh/setup
      - run:
           name: release zip
           command: VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"` && gh release create $VERSION_STRING fans.zip
