@@ -31,7 +31,7 @@
 
         function updateResources() {
             var fileName = 'fans.zip';
-            var uriString = "https://github.com/lancard/nue-fans/archive/refs/heads/master.zip";
+            var uriString = "https://github.com/lancard/nue-fans/releases/latest/download/fans.zip";
 
             window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry) {
                 dirEntry.getFile(fileName, { create: true }, function (targetFile) {
