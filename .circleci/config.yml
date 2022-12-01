@@ -14,7 +14,7 @@ jobs:
           command: BUILD_DATE=`date "+%Y-%m-%d %H:%M:%S"`
      - run:
           name: generate version file
-          command: echo $BUILD_DATE > fans/version.txt
+          command: echo $BUILD_DATE
      - run:
           name: get tiles
           command: git clone --depth=1 --branch main https://github.com/lancard/korea-openstreetmap-tiles.git fans/tiles
