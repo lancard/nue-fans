@@ -1,13 +1,10 @@
 version: 2.1
 
-orbs:
-  gh: circleci/github-cli@2.1.1
-
 jobs:
  build:
-   machine:
-    image: ubuntu-2204:2022.04.2
-   steps:
+    docker:
+      - image: cimg/node:current
+    steps:
      - checkout
      - run:
           name: generate version file
