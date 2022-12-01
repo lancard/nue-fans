@@ -25,8 +25,15 @@
             });
         });
 
+        function onDecompressSuccess(status) {
+            if(status == 0){
+                $(".progress-bar").text('complete!');
+            }
+        }
+
         function onDownloadSuccess() {
-            zip.unzip(storageUri + fileName, storageUri + unzippedDirectory, function (status) { console.dir(status) });
+            $(".progress-bar").text('decompressing...');
+            zip.unzip(storageUri + fileName, storageUri + unzippedDirectory, onDecompressSuccess);
         }
 
         function onDownloadError(err) {
@@ -34,12 +41,18 @@
             alert(err);
         }
 
+        function updateProgressBar(percent) {
+            $(".progress-bar").css('width', percent.toFixed(1) + '%').attr('aria-valuenow', +percent.toFixed(1)).text(percent.toFixed(1) + '%');
+        }
+
         function onDownloadProgress(progress) {
-            var percent_string = (100 * progress.bytesReceived / progress.totalBytesToReceive) + '%';
-            console.log(percent_string);
+            var percent = 100 * progress.bytesReceived / progress.totalBytesToReceive;
+            updateProgressBar(percent);
         }
 
         function updateResources() {
+            updateProgressBar(0);
+            $(".progress").show();
             var download = downloader.createDownload(downloadGithubUriString, storageUri + fileName);
             download.startAsync().then(onDownloadSuccess, onDownloadError, onDownloadProgress);
         }
@@ -78,7 +91,13 @@
                 </div>
             </div>
         </div>
+
+        <div class="progress collapse">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width: 0%;"></div>
+        </div>
     </div>
+
 </body>
 
 </html>
