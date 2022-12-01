@@ -17,10 +17,10 @@ jobs:
           command: git clone --depth=1 --branch main https://github.com/lancard/korea-openstreetmap-tiles.git fans/tiles
      - run:
           name: remove unnecessary files
-          command: rm fans/tiles/clear.sh fans/tiles/index.js fans/tiles/README.md
+          command: cd fans/tiles && rm -rf clear.sh index.js README.md .git .gitignore
      - run:
           name: compress to zip
-          command: cd fans && zip -r ../fans.zip *
+          command: cd fans && zip -q -r ../fans.zip *
      - gh/setup
      - run:
           name: release zip
