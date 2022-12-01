@@ -451,16 +451,14 @@
             map = L.map('map',
                 {
                     center: [37.55748666666666, 126.79195416666667],
-                    zoom: 11,
-                    maxBounds: maxBounds
+                    zoom: 11
                 }
             );
 
             // demo();
 
             L.tileLayer('tiles/{z}/{x}/{y}.png', {
-                bounds: maxBounds,
-                maxNativeZoom: 11,
+                maxNativeZoom: 13,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }).addTo(map);
 
