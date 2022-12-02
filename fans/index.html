@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Free Aviation Navigation System</title>
+
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
 
     <script src="bootstrap/bootstrap.bundle.min.js"></script>
@@ -15,45 +17,9 @@
 
     <link rel="stylesheet" href="leaflet/leaflet.css" />
     <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            background-color: black;
-        }
-
-        .leaflet-container {
-            height: 400px;
-            width: 600px;
-            max-width: 100%;
-            max-height: 100%;
-        }
-
         #map {
             width: 100%;
             height: 100%;
-        }
-
-        #menu,
-        #status {
-            height: 5vh;
-            line-height: 5vh;
-            color: white;
-        }
-
-        #log {
-            height: 5vh;
-            line-height: 5vh;
-            color: white;
-        }
-
-        .label-design {
-            font-size: 12px;
-            font-weight: bold;
-            -webkit-text-stroke: 1px blue;
-            background-color: transparent;
-            border: transparent;
-            box-shadow: none;
         }
     </style>
     <script>
@@ -124,7 +90,7 @@
                                     <option value="1016">1016 (30.00)</option>
                                     <option value="1015">1015 (29.97)</option>
                                     <option value="1014">1014 (29.94)</option>
-                                    <option value="1013">1013 (29.91)</option>
+                                    <option value="1013" selected>1013 (29.91)</option>
                                     <option value="1012">1012 (29.88)</option>
                                     <option value="1011">1011 (29.85)</option>
                                     <option value="1010">1010 (29.83)</option>
@@ -182,8 +148,16 @@
                             <div class="input-group">
                                 <span class="input-group-text bg-dark">Track</span>
                                 <div class="form-check form-switch form-control">
-                                    <input class="form-check-input" type="checkbox" id="trackMyPosition">
+                                    <input class="form-check-input m-1" type="checkbox" id="trackMyPosition">
                                 </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-link">
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark">VATSIM C/S</span>
+                                <input type="text" class="form-control" id="vatsimCallsign">
                             </div>
                         </div>
                     </li>
@@ -211,7 +185,9 @@
     <div id="map" class="container"></div>
 
     <footer class="bg-dark mt-auto">
-        <div id="status"></div>
+        <div class="container-fluid text-white p-2">
+            <span id="status">test</span>
+        </div>
     </footer>
 
     <script>
@@ -417,7 +393,7 @@
                     .addTo(map);
             }
             else {
-                currentLocationPopup.setLatLng(lagLng).setTooltipContent(`${latitude}<br>${longitude}`).setRadius(radius);
+                currentLocationPopup.setLatLng(lagLng).setTooltipContent(`${latitude}\u2708<br>${longitude}`).setRadius(radius);
             }
 
             if ($("#trackMyPosition").is(':checked')) {
