@@ -28,17 +28,21 @@
                 $("#updateButton").attr("disabled", false);
                 $.get('/__cdvfile_files__/fans/version.txt', (ret) => {
                     $("#startButton").attr("disabled", false);
-                    
                     $("#firstRunAlert").hide();
-                    $("#currentVersion").text(`Installed Version: ${ret}`);
-                    installedVersion = ret;
+
+                    installedVersion = $.trim(ret);
+                    $("#currentVersion").show().text(`Installed Version: ${installedVersion}`);
 
                     $.getJSON('https://api.github.com/repos/lancard/nue-fans/releases', (ret) => {
-                        var latestRelease = ret.pop();
-                        latestVersion = latestRelease.tag_name;
+                        latestVersion = ret.pop().tag_name;
+                        $("#latestVersion").show().text(`Latest Version: ${latestVersion}`);
 
                         if (installedVersion != latestVersion) {
                             $("#updateAlert").show();
+                            $("#updateButton").attr("disabled", false);
+                        }
+                        else {
+                            $("#updateButton").attr("disabled", true);
                         }
                     });
                 });
@@ -99,7 +103,7 @@
                     <button tyle="button" id="startButton" class="btn btn-success"
                         onclick="location.href='/__cdvfile_files__/fans/index.html'" disabled>Start!</button>
                 </p>
-                <div id="firstRunAlert" class="alert alert-dismissible alert-danger">
+                <div id="firstRunAlert" class="alert alert-danger">
                     You should download resources at first time. (Click below)
                 </div>
                 <div id="currentVersion" class="alert alert-success collapse"></div>
@@ -113,7 +117,8 @@
                 <p class="card-text">To Update, click this:
                     <button tyle="button" id="updateButton" class="btn btn-info" onclick="updateResources();" disabled>Update</button>
                 </p>
-                <div id="updateAlert" class="alert alert-dismissible alert-warning collapse">
+                <div id="latestVersion" class="alert alert-warning collapse"></div>
+                <div id="updateAlert" class="alert alert-warning collapse">
                     There is a version to update. Click "Update" button.
                 </div>
             </div>
