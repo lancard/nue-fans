@@ -31,54 +31,21 @@
         }
     </script>
     <style>
-        nav,
-        footer {
+        nav {
             height: 60px;
+            z-index: 2000;
         }
 
-        .tape-speed,
-        .tape-altitude {
-            height: calc(100vh - 120px);
-            width: 70px;
+        .altitude-panel {
+            position: absolute;
+            width: 180px;
+            padding: 10px;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
             color: white;
-            background-color: #999;
-            overflow: hidden;
-        }
-
-        .tape-speed {
-            width: 70px;
-        }
-        .tape-altitude {
-            width: 90px;
-        }
-
-        .tape-speed-scroll div {
-            margin: 10px 0 10px 10px;
-            height: 20px;
-        }
-        .tape-altitude-scroll div {
-            margin: 10px 10px 10px 0px;
-            height: 20px;
-        }
-
-        .current-speed {
-            position: absolute;
             background-color: black;
-            top: calc(50vh - 60px);
-            width: 70px;
-            height: 40px;
-            border: solid;
-            z-index: 10;
-        }
-
-        .current-altitude {
-            position: absolute;
-            background-color: black;
-            top: calc(50vh - 60px);
-            width: 70px;
-            height: 40px;
-            border: solid;
-            z-index: 10;
+            border: solid white;
         }
     </style>
 </head>
@@ -93,101 +60,6 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <div class="nav-link">
-                            <div class="input-group">
-                                <span class="input-group-text">QNH</span>
-                                <select id="stationQNH" class="form-control form-select">
-                                    <option value="1050">1050 (31.01)</option>
-                                    <option value="1049">1049 (30.98)</option>
-                                    <option value="1048">1048 (30.95)</option>
-                                    <option value="1047">1047 (30.92)</option>
-                                    <option value="1046">1046 (30.89)</option>
-                                    <option value="1045">1045 (30.86)</option>
-                                    <option value="1044">1044 (30.83)</option>
-                                    <option value="1043">1043 (30.80)</option>
-                                    <option value="1042">1042 (30.77)</option>
-                                    <option value="1041">1041 (30.74)</option>
-                                    <option value="1040">1040 (30.71)</option>
-                                    <option value="1039">1039 (30.68)</option>
-                                    <option value="1038">1038 (30.65)</option>
-                                    <option value="1037">1037 (30.62)</option>
-                                    <option value="1036">1036 (30.59)</option>
-                                    <option value="1035">1035 (30.56)</option>
-                                    <option value="1034">1034 (30.53)</option>
-                                    <option value="1033">1033 (30.50)</option>
-                                    <option value="1032">1032 (30.47)</option>
-                                    <option value="1031">1031 (30.45)</option>
-                                    <option value="1030">1030 (30.42)</option>
-                                    <option value="1029">1029 (30.39)</option>
-                                    <option value="1028">1028 (30.36)</option>
-                                    <option value="1027">1027 (30.33)</option>
-                                    <option value="1026">1026 (30.30)</option>
-                                    <option value="1025">1025 (30.27)</option>
-                                    <option value="1024">1024 (30.24)</option>
-                                    <option value="1023">1023 (30.21)</option>
-                                    <option value="1022">1022 (30.18)</option>
-                                    <option value="1021">1021 (30.15)</option>
-                                    <option value="1020">1020 (30.12)</option>
-                                    <option value="1019">1019 (30.09)</option>
-                                    <option value="1018">1018 (30.06)</option>
-                                    <option value="1017">1017 (30.03)</option>
-                                    <option value="1016">1016 (30.00)</option>
-                                    <option value="1015">1015 (29.97)</option>
-                                    <option value="1014">1014 (29.94)</option>
-                                    <option value="1013" selected>1013 (29.91)</option>
-                                    <option value="1012">1012 (29.88)</option>
-                                    <option value="1011">1011 (29.85)</option>
-                                    <option value="1010">1010 (29.83)</option>
-                                    <option value="1009">1009 (29.80)</option>
-                                    <option value="1008">1008 (29.77)</option>
-                                    <option value="1007">1007 (29.74)</option>
-                                    <option value="1006">1006 (29.71)</option>
-                                    <option value="1005">1005 (29.68)</option>
-                                    <option value="1004">1004 (29.65)</option>
-                                    <option value="1003">1003 (29.62)</option>
-                                    <option value="1002">1002 (29.59)</option>
-                                    <option value="1001">1001 (29.56)</option>
-                                    <option value="1000">1000 (29.53)</option>
-                                    <option value="0999">0999 (29.50)</option>
-                                    <option value="0998">0998 (29.47)</option>
-                                    <option value="0997">0997 (29.44)</option>
-                                    <option value="0996">0996 (29.41)</option>
-                                    <option value="0995">0995 (29.38)</option>
-                                    <option value="0994">0994 (29.35)</option>
-                                    <option value="0993">0993 (29.32)</option>
-                                    <option value="0992">0992 (29.29)</option>
-                                    <option value="0991">0991 (29.26)</option>
-                                    <option value="0990">0990 (29.23)</option>
-                                    <option value="0989">0989 (29.21)</option>
-                                    <option value="0988">0988 (29.18)</option>
-                                    <option value="0987">0987 (29.15)</option>
-                                    <option value="0986">0986 (29.12)</option>
-                                    <option value="0985">0985 (29.09)</option>
-                                    <option value="0984">0984 (29.06)</option>
-                                    <option value="0983">0983 (29.03)</option>
-                                    <option value="0982">0982 (29.00)</option>
-                                    <option value="0981">0981 (28.97)</option>
-                                    <option value="0980">0980 (28.94)</option>
-                                    <option value="0979">0979 (28.91)</option>
-                                    <option value="0978">0978 (28.88)</option>
-                                    <option value="0977">0977 (28.85)</option>
-                                    <option value="0976">0976 (28.82)</option>
-                                    <option value="0975">0975 (28.79)</option>
-                                    <option value="0974">0974 (28.76)</option>
-                                    <option value="0973">0973 (28.73)</option>
-                                    <option value="0972">0972 (28.70)</option>
-                                    <option value="0971">0971 (28.67)</option>
-                                    <option value="0970">0970 (28.64)</option>
-                                    <option value="0969">0969 (28.61)</option>
-                                    <option value="0968">0968 (28.59)</option>
-                                    <option value="0967">0967 (28.56)</option>
-                                    <option value="0966">0966 (28.53)</option>
-                                    <option value="0965">0965 (28.50)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </li>
                     <li class="nav-item">
                         <div class="nav-link">
                             <div class="input-group">
@@ -211,585 +83,104 @@
         </div>
     </nav>
 
-    <div class="d-flex flex-grow-1 container-fluid p-0">
-        <div class="tape-speed text-end">
-            <div class="current-speed"></div>
-            <div class="tape-scroll" style="transform: translateY(-50px);">
-                <div>500 ─</div>
-                <div>490 ─</div>
-                <div>480 ─</div>
-                <div>470 ─</div>
-                <div>460 ─</div>
-                <div>450 ─</div>
-                <div>440 ─</div>
-                <div>430 ─</div>
-                <div>420 ─</div>
-                <div>410 ─</div>
-                <div>400 ─</div>
-                <div>390 ─</div>
-                <div>380 ─</div>
-                <div>370 ─</div>
-                <div>360 ─</div>
-                <div>350 ─</div>
-                <div>340 ─</div>
-                <div>330 ─</div>
-                <div>320 ─</div>
-                <div>310 ─</div>
-                <div>300 ─</div>
-                <div>290 ─</div>
-                <div>280 ─</div>
-                <div>270 ─</div>
-                <div>260 ─</div>
-                <div>250 ─</div>
-                <div>240 ─</div>
-                <div>230 ─</div>
-                <div>220 ─</div>
-                <div>210 ─</div>
-                <div>200 ─</div>
-                <div>190 ─</div>
-                <div>180 ─</div>
-                <div>170 ─</div>
-                <div>160 ─</div>
-                <div>150 ─</div>
-                <div>140 ─</div>
-                <div>130 ─</div>
-                <div>120 ─</div>
-                <div>110 ─</div>
-                <div>100 ─</div>
-                <div>90 ─</div>
-                <div>80 ─</div>
-                <div>70 ─</div>
-                <div>60 ─</div>
-                <div>50 ─</div>
-                <div>40 ─</div>
-                <div>30 ─</div>
-                <div>20 ─</div>
-                <div>10 ─</div>
-                <div>0 ─</div>
-            </div>
-        </div>
-        <div id="map" class="flex-grow-1"></div>
-        <div class="tape-altitude">
-            <div class="current-altitude"></div>
-            <div class="tape-altitude-scroll" style="transform: translateY(-50px);">
-                <div>─ 50000</div>
-                <div>─ 49900</div>
-                <div>─ 49800</div>
-                <div>─ 49700</div>
-                <div>─ 49600</div>
-                <div>─ 49500</div>
-                <div>─ 49400</div>
-                <div>─ 49300</div>
-                <div>─ 49200</div>
-                <div>─ 49100</div>
-                <div>─ 49000</div>
-                <div>─ 48900</div>
-                <div>─ 48800</div>
-                <div>─ 48700</div>
-                <div>─ 48600</div>
-                <div>─ 48500</div>
-                <div>─ 48400</div>
-                <div>─ 48300</div>
-                <div>─ 48200</div>
-                <div>─ 48100</div>
-                <div>─ 48000</div>
-                <div>─ 47900</div>
-                <div>─ 47800</div>
-                <div>─ 47700</div>
-                <div>─ 47600</div>
-                <div>─ 47500</div>
-                <div>─ 47400</div>
-                <div>─ 47300</div>
-                <div>─ 47200</div>
-                <div>─ 47100</div>
-                <div>─ 47000</div>
-                <div>─ 46900</div>
-                <div>─ 46800</div>
-                <div>─ 46700</div>
-                <div>─ 46600</div>
-                <div>─ 46500</div>
-                <div>─ 46400</div>
-                <div>─ 46300</div>
-                <div>─ 46200</div>
-                <div>─ 46100</div>
-                <div>─ 46000</div>
-                <div>─ 45900</div>
-                <div>─ 45800</div>
-                <div>─ 45700</div>
-                <div>─ 45600</div>
-                <div>─ 45500</div>
-                <div>─ 45400</div>
-                <div>─ 45300</div>
-                <div>─ 45200</div>
-                <div>─ 45100</div>
-                <div>─ 45000</div>
-                <div>─ 44900</div>
-                <div>─ 44800</div>
-                <div>─ 44700</div>
-                <div>─ 44600</div>
-                <div>─ 44500</div>
-                <div>─ 44400</div>
-                <div>─ 44300</div>
-                <div>─ 44200</div>
-                <div>─ 44100</div>
-                <div>─ 44000</div>
-                <div>─ 43900</div>
-                <div>─ 43800</div>
-                <div>─ 43700</div>
-                <div>─ 43600</div>
-                <div>─ 43500</div>
-                <div>─ 43400</div>
-                <div>─ 43300</div>
-                <div>─ 43200</div>
-                <div>─ 43100</div>
-                <div>─ 43000</div>
-                <div>─ 42900</div>
-                <div>─ 42800</div>
-                <div>─ 42700</div>
-                <div>─ 42600</div>
-                <div>─ 42500</div>
-                <div>─ 42400</div>
-                <div>─ 42300</div>
-                <div>─ 42200</div>
-                <div>─ 42100</div>
-                <div>─ 42000</div>
-                <div>─ 41900</div>
-                <div>─ 41800</div>
-                <div>─ 41700</div>
-                <div>─ 41600</div>
-                <div>─ 41500</div>
-                <div>─ 41400</div>
-                <div>─ 41300</div>
-                <div>─ 41200</div>
-                <div>─ 41100</div>
-                <div>─ 41000</div>
-                <div>─ 40900</div>
-                <div>─ 40800</div>
-                <div>─ 40700</div>
-                <div>─ 40600</div>
-                <div>─ 40500</div>
-                <div>─ 40400</div>
-                <div>─ 40300</div>
-                <div>─ 40200</div>
-                <div>─ 40100</div>
-                <div>─ 40000</div>
-                <div>─ 39900</div>
-                <div>─ 39800</div>
-                <div>─ 39700</div>
-                <div>─ 39600</div>
-                <div>─ 39500</div>
-                <div>─ 39400</div>
-                <div>─ 39300</div>
-                <div>─ 39200</div>
-                <div>─ 39100</div>
-                <div>─ 39000</div>
-                <div>─ 38900</div>
-                <div>─ 38800</div>
-                <div>─ 38700</div>
-                <div>─ 38600</div>
-                <div>─ 38500</div>
-                <div>─ 38400</div>
-                <div>─ 38300</div>
-                <div>─ 38200</div>
-                <div>─ 38100</div>
-                <div>─ 38000</div>
-                <div>─ 37900</div>
-                <div>─ 37800</div>
-                <div>─ 37700</div>
-                <div>─ 37600</div>
-                <div>─ 37500</div>
-                <div>─ 37400</div>
-                <div>─ 37300</div>
-                <div>─ 37200</div>
-                <div>─ 37100</div>
-                <div>─ 37000</div>
-                <div>─ 36900</div>
-                <div>─ 36800</div>
-                <div>─ 36700</div>
-                <div>─ 36600</div>
-                <div>─ 36500</div>
-                <div>─ 36400</div>
-                <div>─ 36300</div>
-                <div>─ 36200</div>
-                <div>─ 36100</div>
-                <div>─ 36000</div>
-                <div>─ 35900</div>
-                <div>─ 35800</div>
-                <div>─ 35700</div>
-                <div>─ 35600</div>
-                <div>─ 35500</div>
-                <div>─ 35400</div>
-                <div>─ 35300</div>
-                <div>─ 35200</div>
-                <div>─ 35100</div>
-                <div>─ 35000</div>
-                <div>─ 34900</div>
-                <div>─ 34800</div>
-                <div>─ 34700</div>
-                <div>─ 34600</div>
-                <div>─ 34500</div>
-                <div>─ 34400</div>
-                <div>─ 34300</div>
-                <div>─ 34200</div>
-                <div>─ 34100</div>
-                <div>─ 34000</div>
-                <div>─ 33900</div>
-                <div>─ 33800</div>
-                <div>─ 33700</div>
-                <div>─ 33600</div>
-                <div>─ 33500</div>
-                <div>─ 33400</div>
-                <div>─ 33300</div>
-                <div>─ 33200</div>
-                <div>─ 33100</div>
-                <div>─ 33000</div>
-                <div>─ 32900</div>
-                <div>─ 32800</div>
-                <div>─ 32700</div>
-                <div>─ 32600</div>
-                <div>─ 32500</div>
-                <div>─ 32400</div>
-                <div>─ 32300</div>
-                <div>─ 32200</div>
-                <div>─ 32100</div>
-                <div>─ 32000</div>
-                <div>─ 31900</div>
-                <div>─ 31800</div>
-                <div>─ 31700</div>
-                <div>─ 31600</div>
-                <div>─ 31500</div>
-                <div>─ 31400</div>
-                <div>─ 31300</div>
-                <div>─ 31200</div>
-                <div>─ 31100</div>
-                <div>─ 31000</div>
-                <div>─ 30900</div>
-                <div>─ 30800</div>
-                <div>─ 30700</div>
-                <div>─ 30600</div>
-                <div>─ 30500</div>
-                <div>─ 30400</div>
-                <div>─ 30300</div>
-                <div>─ 30200</div>
-                <div>─ 30100</div>
-                <div>─ 30000</div>
-                <div>─ 29900</div>
-                <div>─ 29800</div>
-                <div>─ 29700</div>
-                <div>─ 29600</div>
-                <div>─ 29500</div>
-                <div>─ 29400</div>
-                <div>─ 29300</div>
-                <div>─ 29200</div>
-                <div>─ 29100</div>
-                <div>─ 29000</div>
-                <div>─ 28900</div>
-                <div>─ 28800</div>
-                <div>─ 28700</div>
-                <div>─ 28600</div>
-                <div>─ 28500</div>
-                <div>─ 28400</div>
-                <div>─ 28300</div>
-                <div>─ 28200</div>
-                <div>─ 28100</div>
-                <div>─ 28000</div>
-                <div>─ 27900</div>
-                <div>─ 27800</div>
-                <div>─ 27700</div>
-                <div>─ 27600</div>
-                <div>─ 27500</div>
-                <div>─ 27400</div>
-                <div>─ 27300</div>
-                <div>─ 27200</div>
-                <div>─ 27100</div>
-                <div>─ 27000</div>
-                <div>─ 26900</div>
-                <div>─ 26800</div>
-                <div>─ 26700</div>
-                <div>─ 26600</div>
-                <div>─ 26500</div>
-                <div>─ 26400</div>
-                <div>─ 26300</div>
-                <div>─ 26200</div>
-                <div>─ 26100</div>
-                <div>─ 26000</div>
-                <div>─ 25900</div>
-                <div>─ 25800</div>
-                <div>─ 25700</div>
-                <div>─ 25600</div>
-                <div>─ 25500</div>
-                <div>─ 25400</div>
-                <div>─ 25300</div>
-                <div>─ 25200</div>
-                <div>─ 25100</div>
-                <div>─ 25000</div>
-                <div>─ 24900</div>
-                <div>─ 24800</div>
-                <div>─ 24700</div>
-                <div>─ 24600</div>
-                <div>─ 24500</div>
-                <div>─ 24400</div>
-                <div>─ 24300</div>
-                <div>─ 24200</div>
-                <div>─ 24100</div>
-                <div>─ 24000</div>
-                <div>─ 23900</div>
-                <div>─ 23800</div>
-                <div>─ 23700</div>
-                <div>─ 23600</div>
-                <div>─ 23500</div>
-                <div>─ 23400</div>
-                <div>─ 23300</div>
-                <div>─ 23200</div>
-                <div>─ 23100</div>
-                <div>─ 23000</div>
-                <div>─ 22900</div>
-                <div>─ 22800</div>
-                <div>─ 22700</div>
-                <div>─ 22600</div>
-                <div>─ 22500</div>
-                <div>─ 22400</div>
-                <div>─ 22300</div>
-                <div>─ 22200</div>
-                <div>─ 22100</div>
-                <div>─ 22000</div>
-                <div>─ 21900</div>
-                <div>─ 21800</div>
-                <div>─ 21700</div>
-                <div>─ 21600</div>
-                <div>─ 21500</div>
-                <div>─ 21400</div>
-                <div>─ 21300</div>
-                <div>─ 21200</div>
-                <div>─ 21100</div>
-                <div>─ 21000</div>
-                <div>─ 20900</div>
-                <div>─ 20800</div>
-                <div>─ 20700</div>
-                <div>─ 20600</div>
-                <div>─ 20500</div>
-                <div>─ 20400</div>
-                <div>─ 20300</div>
-                <div>─ 20200</div>
-                <div>─ 20100</div>
-                <div>─ 20000</div>
-                <div>─ 19900</div>
-                <div>─ 19800</div>
-                <div>─ 19700</div>
-                <div>─ 19600</div>
-                <div>─ 19500</div>
-                <div>─ 19400</div>
-                <div>─ 19300</div>
-                <div>─ 19200</div>
-                <div>─ 19100</div>
-                <div>─ 19000</div>
-                <div>─ 18900</div>
-                <div>─ 18800</div>
-                <div>─ 18700</div>
-                <div>─ 18600</div>
-                <div>─ 18500</div>
-                <div>─ 18400</div>
-                <div>─ 18300</div>
-                <div>─ 18200</div>
-                <div>─ 18100</div>
-                <div>─ 18000</div>
-                <div>─ 17900</div>
-                <div>─ 17800</div>
-                <div>─ 17700</div>
-                <div>─ 17600</div>
-                <div>─ 17500</div>
-                <div>─ 17400</div>
-                <div>─ 17300</div>
-                <div>─ 17200</div>
-                <div>─ 17100</div>
-                <div>─ 17000</div>
-                <div>─ 16900</div>
-                <div>─ 16800</div>
-                <div>─ 16700</div>
-                <div>─ 16600</div>
-                <div>─ 16500</div>
-                <div>─ 16400</div>
-                <div>─ 16300</div>
-                <div>─ 16200</div>
-                <div>─ 16100</div>
-                <div>─ 16000</div>
-                <div>─ 15900</div>
-                <div>─ 15800</div>
-                <div>─ 15700</div>
-                <div>─ 15600</div>
-                <div>─ 15500</div>
-                <div>─ 15400</div>
-                <div>─ 15300</div>
-                <div>─ 15200</div>
-                <div>─ 15100</div>
-                <div>─ 15000</div>
-                <div>─ 14900</div>
-                <div>─ 14800</div>
-                <div>─ 14700</div>
-                <div>─ 14600</div>
-                <div>─ 14500</div>
-                <div>─ 14400</div>
-                <div>─ 14300</div>
-                <div>─ 14200</div>
-                <div>─ 14100</div>
-                <div>─ 14000</div>
-                <div>─ 13900</div>
-                <div>─ 13800</div>
-                <div>─ 13700</div>
-                <div>─ 13600</div>
-                <div>─ 13500</div>
-                <div>─ 13400</div>
-                <div>─ 13300</div>
-                <div>─ 13200</div>
-                <div>─ 13100</div>
-                <div>─ 13000</div>
-                <div>─ 12900</div>
-                <div>─ 12800</div>
-                <div>─ 12700</div>
-                <div>─ 12600</div>
-                <div>─ 12500</div>
-                <div>─ 12400</div>
-                <div>─ 12300</div>
-                <div>─ 12200</div>
-                <div>─ 12100</div>
-                <div>─ 12000</div>
-                <div>─ 11900</div>
-                <div>─ 11800</div>
-                <div>─ 11700</div>
-                <div>─ 11600</div>
-                <div>─ 11500</div>
-                <div>─ 11400</div>
-                <div>─ 11300</div>
-                <div>─ 11200</div>
-                <div>─ 11100</div>
-                <div>─ 11000</div>
-                <div>─ 10900</div>
-                <div>─ 10800</div>
-                <div>─ 10700</div>
-                <div>─ 10600</div>
-                <div>─ 10500</div>
-                <div>─ 10400</div>
-                <div>─ 10300</div>
-                <div>─ 10200</div>
-                <div>─ 10100</div>
-                <div>─ 10000</div>
-                <div>─ 9900</div>
-                <div>─ 9800</div>
-                <div>─ 9700</div>
-                <div>─ 9600</div>
-                <div>─ 9500</div>
-                <div>─ 9400</div>
-                <div>─ 9300</div>
-                <div>─ 9200</div>
-                <div>─ 9100</div>
-                <div>─ 9000</div>
-                <div>─ 8900</div>
-                <div>─ 8800</div>
-                <div>─ 8700</div>
-                <div>─ 8600</div>
-                <div>─ 8500</div>
-                <div>─ 8400</div>
-                <div>─ 8300</div>
-                <div>─ 8200</div>
-                <div>─ 8100</div>
-                <div>─ 8000</div>
-                <div>─ 7900</div>
-                <div>─ 7800</div>
-                <div>─ 7700</div>
-                <div>─ 7600</div>
-                <div>─ 7500</div>
-                <div>─ 7400</div>
-                <div>─ 7300</div>
-                <div>─ 7200</div>
-                <div>─ 7100</div>
-                <div>─ 7000</div>
-                <div>─ 6900</div>
-                <div>─ 6800</div>
-                <div>─ 6700</div>
-                <div>─ 6600</div>
-                <div>─ 6500</div>
-                <div>─ 6400</div>
-                <div>─ 6300</div>
-                <div>─ 6200</div>
-                <div>─ 6100</div>
-                <div>─ 6000</div>
-                <div>─ 5900</div>
-                <div>─ 5800</div>
-                <div>─ 5700</div>
-                <div>─ 5600</div>
-                <div>─ 5500</div>
-                <div>─ 5400</div>
-                <div>─ 5300</div>
-                <div>─ 5200</div>
-                <div>─ 5100</div>
-                <div>─ 5000</div>
-                <div>─ 4900</div>
-                <div>─ 4800</div>
-                <div>─ 4700</div>
-                <div>─ 4600</div>
-                <div>─ 4500</div>
-                <div>─ 4400</div>
-                <div>─ 4300</div>
-                <div>─ 4200</div>
-                <div>─ 4100</div>
-                <div>─ 4000</div>
-                <div>─ 3900</div>
-                <div>─ 3800</div>
-                <div>─ 3700</div>
-                <div>─ 3600</div>
-                <div>─ 3500</div>
-                <div>─ 3400</div>
-                <div>─ 3300</div>
-                <div>─ 3200</div>
-                <div>─ 3100</div>
-                <div>─ 3000</div>
-                <div>─ 2900</div>
-                <div>─ 2800</div>
-                <div>─ 2700</div>
-                <div>─ 2600</div>
-                <div>─ 2500</div>
-                <div>─ 2400</div>
-                <div>─ 2300</div>
-                <div>─ 2200</div>
-                <div>─ 2100</div>
-                <div>─ 2000</div>
-                <div>─ 1900</div>
-                <div>─ 1800</div>
-                <div>─ 1700</div>
-                <div>─ 1600</div>
-                <div>─ 1500</div>
-                <div>─ 1400</div>
-                <div>─ 1300</div>
-                <div>─ 1200</div>
-                <div>─ 1100</div>
-                <div>─ 1000</div>
-                <div>─ 900</div>
-                <div>─ 800</div>
-                <div>─ 700</div>
-                <div>─ 600</div>
-                <div>─ 500</div>
-                <div>─ 400</div>
-                <div>─ 300</div>
-                <div>─ 200</div>
-                <div>─ 100</div>
-                <div>─ 0</div>
-                <div>─ -100</div>
-                <div>─ -200</div>
-                <div>─ -300</div>
-                <div>─ -400</div>
-                <div>─ -500</div>
-                <div>─ -600</div>
-                <div>─ -700</div>
-                <div>─ -800</div>
-                <div>─ -900</div>
-                <div>─ -1000</div>
-            </div>
-        </div>
+    <div id="map" class="flex-grow-1"></div>
+
+    <div class="altitude-panel">
+        <div><small>ALT(GPS): <strong><span id="gpsAltitude">0</span></strong> ft</small></div>
+        <div><small>ALT(BARO): <strong><span id="barometerAltitude">0</span></strong> ft</small></div>
+        <select id="stationQNH" class="form-control-sm form-select-sm m-2">
+            <option value="1050">1050 (31.01)</option>
+            <option value="1049">1049 (30.98)</option>
+            <option value="1048">1048 (30.95)</option>
+            <option value="1047">1047 (30.92)</option>
+            <option value="1046">1046 (30.89)</option>
+            <option value="1045">1045 (30.86)</option>
+            <option value="1044">1044 (30.83)</option>
+            <option value="1043">1043 (30.80)</option>
+            <option value="1042">1042 (30.77)</option>
+            <option value="1041">1041 (30.74)</option>
+            <option value="1040">1040 (30.71)</option>
+            <option value="1039">1039 (30.68)</option>
+            <option value="1038">1038 (30.65)</option>
+            <option value="1037">1037 (30.62)</option>
+            <option value="1036">1036 (30.59)</option>
+            <option value="1035">1035 (30.56)</option>
+            <option value="1034">1034 (30.53)</option>
+            <option value="1033">1033 (30.50)</option>
+            <option value="1032">1032 (30.47)</option>
+            <option value="1031">1031 (30.45)</option>
+            <option value="1030">1030 (30.42)</option>
+            <option value="1029">1029 (30.39)</option>
+            <option value="1028">1028 (30.36)</option>
+            <option value="1027">1027 (30.33)</option>
+            <option value="1026">1026 (30.30)</option>
+            <option value="1025">1025 (30.27)</option>
+            <option value="1024">1024 (30.24)</option>
+            <option value="1023">1023 (30.21)</option>
+            <option value="1022">1022 (30.18)</option>
+            <option value="1021">1021 (30.15)</option>
+            <option value="1020">1020 (30.12)</option>
+            <option value="1019">1019 (30.09)</option>
+            <option value="1018">1018 (30.06)</option>
+            <option value="1017">1017 (30.03)</option>
+            <option value="1016">1016 (30.00)</option>
+            <option value="1015">1015 (29.97)</option>
+            <option value="1014">1014 (29.94)</option>
+            <option value="1013" selected>1013 (29.91)</option>
+            <option value="1012">1012 (29.88)</option>
+            <option value="1011">1011 (29.85)</option>
+            <option value="1010">1010 (29.83)</option>
+            <option value="1009">1009 (29.80)</option>
+            <option value="1008">1008 (29.77)</option>
+            <option value="1007">1007 (29.74)</option>
+            <option value="1006">1006 (29.71)</option>
+            <option value="1005">1005 (29.68)</option>
+            <option value="1004">1004 (29.65)</option>
+            <option value="1003">1003 (29.62)</option>
+            <option value="1002">1002 (29.59)</option>
+            <option value="1001">1001 (29.56)</option>
+            <option value="1000">1000 (29.53)</option>
+            <option value="0999">0999 (29.50)</option>
+            <option value="0998">0998 (29.47)</option>
+            <option value="0997">0997 (29.44)</option>
+            <option value="0996">0996 (29.41)</option>
+            <option value="0995">0995 (29.38)</option>
+            <option value="0994">0994 (29.35)</option>
+            <option value="0993">0993 (29.32)</option>
+            <option value="0992">0992 (29.29)</option>
+            <option value="0991">0991 (29.26)</option>
+            <option value="0990">0990 (29.23)</option>
+            <option value="0989">0989 (29.21)</option>
+            <option value="0988">0988 (29.18)</option>
+            <option value="0987">0987 (29.15)</option>
+            <option value="0986">0986 (29.12)</option>
+            <option value="0985">0985 (29.09)</option>
+            <option value="0984">0984 (29.06)</option>
+            <option value="0983">0983 (29.03)</option>
+            <option value="0982">0982 (29.00)</option>
+            <option value="0981">0981 (28.97)</option>
+            <option value="0980">0980 (28.94)</option>
+            <option value="0979">0979 (28.91)</option>
+            <option value="0978">0978 (28.88)</option>
+            <option value="0977">0977 (28.85)</option>
+            <option value="0976">0976 (28.82)</option>
+            <option value="0975">0975 (28.79)</option>
+            <option value="0974">0974 (28.76)</option>
+            <option value="0973">0973 (28.73)</option>
+            <option value="0972">0972 (28.70)</option>
+            <option value="0971">0971 (28.67)</option>
+            <option value="0970">0970 (28.64)</option>
+            <option value="0969">0969 (28.61)</option>
+            <option value="0968">0968 (28.59)</option>
+            <option value="0967">0967 (28.56)</option>
+            <option value="0966">0966 (28.53)</option>
+            <option value="0965">0965 (28.50)</option>
+        </select>
     </div>
 
     <footer class="footer bg-primary mt-auto">
         <div class="container-fluid text-white p-2">
-            <span id="status">test</span>
+            <span id="status">log</span>
         </div>
     </footer>
 
@@ -807,7 +198,10 @@
 
         function onSuccess(values) {
             const altitude = getIndicatedAltitude(values, +$("#stationQNH").val());
-            $(".current-altitude").text(gpsAltitude.toFixed(0));
+
+            $("#gpsAltitude").text(gpsAltitude.toFixed(0));
+            $("#barometerAltitude").text(altitude.toFixed(0));
+
             $("#status").text(`${altitude.toFixed(2)}ft(${(0.3048 * altitude).toFixed(2)}m) / ${gpsAltitude.toFixed(2)}m`);
         };
 
@@ -1008,7 +402,7 @@
         function success(position) {
             gpsAltitude = position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`];
 
-            $(".current-altitude").text(gpsAltitude.toFixed(0));
+            $("#gpsAltitude").text(gpsAltitude.toFixed(0));
 
             var callsign = $("#vatsimCallsign").val();
 
