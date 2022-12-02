@@ -11,7 +11,7 @@ jobs:
      - checkout
      - run:
           name: generate version file
-          command: date "+%Y-%m-%d %H:%M:%S" > fans/version.txt
+          command: date +"1.%Y%m%d.1%H%M%S" > fans/version.txt
      - run:
           name: get tiles
           command: git clone --depth=1 --branch main https://github.com/lancard/korea-openstreetmap-tiles.git fans/tiles
@@ -24,4 +24,4 @@ jobs:
      - gh/setup
      - run:
           name: release zip
-          command: VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"` && gh release create $VERSION_STRING fans.zip
+          command: VERSION_STRING=`cat fans/version.txt` && gh release create $VERSION_STRING fans.zip

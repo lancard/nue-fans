@@ -16,6 +16,8 @@
 
         var downloader = null;
         var storageUri = "";
+        var installedVersion = "";
+        var latestVersion = "";
 
         document.addEventListener("deviceready", function () {
             downloader = new BackgroundTransfer.BackgroundDownloader();
@@ -23,9 +25,27 @@
             window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry) {
                 storageUri = dirEntry.nativeURL;
 
-                $("button").attr("disabled", false);
+                $("#updateButton").attr("disabled", false);
+                $.get('/__cdvfile_files__/fans/version.txt', (ret) => {
+                    $("#startButton").attr("disabled", false);
+                    
+                    $("#firstRunAlert").hide();
+                    $("#currentVersion").text(`Installed Version: ${ret}`);
+                    installedVersion = ret;
+
+                    $.getJSON('https://api.github.com/repos/lancard/nue-fans/releases', (ret) => {
+                        var latestRelease = ret.pop();
+                        latestVersion = latestRelease.tag_name;
+
+                        if (installedVersion != latestVersion) {
+                            $("#updateAlert").show();
+                        }
+                    });
+                });
             });
         });
+
+
 
         function onDecompressSuccess(status) {
             $("button").attr("disabled", false);
@@ -76,12 +96,13 @@
             <div class="card-body">
                 <h4 class="card-title">Navigation Start!</h4>
                 <p class="card-text">To Start Navigation, click this:
-                    <button tyle="button" class="btn btn-success"
+                    <button tyle="button" id="startButton" class="btn btn-success"
                         onclick="location.href='/__cdvfile_files__/fans/index.html'" disabled>Start!</button>
                 </p>
-                <div class="alert alert-dismissible alert-danger">
+                <div id="firstRunAlert" class="alert alert-dismissible alert-danger">
                     You should download resources at first time. (Click below)
                 </div>
+                <div id="currentVersion" class="alert alert-success collapse"></div>
             </div>
         </div>
 
@@ -90,10 +111,10 @@
             <div class="card-body">
                 <h4 class="card-title">Update Resources</h4>
                 <p class="card-text">To Update, click this:
-                    <button tyle="button" class="btn btn-info" onclick="updateResources();" disabled>Update</button>
+                    <button tyle="button" id="updateButton" class="btn btn-info" onclick="updateResources();" disabled>Update</button>
                 </p>
-                <div class="alert alert-dismissible alert-warning">
-                    You can update any time in Internet-enabled environment.
+                <div id="updateAlert" class="alert alert-dismissible alert-warning collapse">
+                    There is a version to update. Click "Update" button.
                 </div>
             </div>
         </div>
