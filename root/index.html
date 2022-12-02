@@ -34,7 +34,7 @@
                     $("#currentVersion").show().text(`Installed Version: ${installedVersion}`);
 
                     $.getJSON('https://api.github.com/repos/lancard/nue-fans/releases', (ret) => {
-                        latestVersion = ret.pop().tag_name;
+                        latestVersion = ret.shift().tag_name;
                         $("#latestVersion").show().text(`Latest Version: ${latestVersion}`);
 
                         if (installedVersion != latestVersion) {
