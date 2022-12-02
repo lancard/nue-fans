@@ -13,9 +13,6 @@ jobs:
           name: generate version file
           command: date +"1.%Y%m%d.1%H%M%S" > fans/version.txt
      - run:
-          name: get tiles
-          command: git clone --depth=1 --branch main https://github.com/lancard/korea-openstreetmap-tiles.git fans/tiles
-     - run:
           name: remove unnecessary files
           command: cd fans/tiles && rm -rf clear.sh index.js README.md .git .gitignore
      - run:
