@@ -14,7 +14,7 @@ jobs:
           command: date +"1.%Y%m%d.1%H%M%S" > fans/version.txt
      - run:
           name: submodule update (tiles)
-          command: git submodule update
+          command: git submodule update --init --recursive
      - run:
           name: remove unnecessary files
           command: cd fans/tiles && rm -rf clear.sh index.js README.md .git .gitignore
