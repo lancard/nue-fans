@@ -24,9 +24,6 @@ jobs:
       - name: compress to zip
         run: cd fans && zip -q -r ../fans.zip *
 
-      - name: release zip
-        run: VERSION_STRING=`cat fans/version.txt` && gh release create $VERSION_STRING fans.zip
-
       - name: create release
         id: create_release
         uses: actions/create-release@v1
