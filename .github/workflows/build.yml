@@ -7,19 +7,43 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: generate version file
-      run: date +"1.%Y%m%d.1%H%M%S" > fans/version.txt
-      
-    - name: submodule update (tiles)
-      run: git submodule update --init --recursive
-      
-    - name: remove unnecessary files
-      run: cd fans/tiles && rm -rf clear.sh index.js README.md .git .gitignore
-      
-    - name: compress to zip
-      run: cd fans && zip -q -r ../fans.zip *
+      - name: generate version string
+        run: VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"` && echo "VERSION_STRING=$VERSION_STRING" >> $GITHUB_ENV
 
-    - name: release zip
-      run: VERSION_STRING=`cat fans/version.txt` && gh release create $VERSION_STRING fans.zip
+      - name: generate version file
+        run: echo "${{ env.VERSION_STRING }}" > fans/version.txt
+      
+      - name: submodule update (tiles)
+        run: git submodule update --init --recursive
+       
+      - name: remove unnecessary files
+        run: cd fans/tiles && rm -rf clear.sh index.js README.md .git .gitignore
+      
+      - name: compress to zip
+        run: cd fans && zip -q -r ../fans.zip *
+
+      - name: release zip
+        run: VERSION_STRING=`cat fans/version.txt` && gh release create $VERSION_STRING fans.zip
+
+      - name: create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ env.VERSION_STRING }}
+          release_name: Release ${{ env.VERSION_STRING }}
+          draft: false
+          prerelease: false
+
+      - name: upload release zip file
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: fans.zip
+          asset_name: fans.zip
+          asset_content_type: application/zip
