@@ -199,10 +199,7 @@
         function onSuccess(values) {
             const altitude = getIndicatedAltitude(values, +$("#stationQNH").val());
 
-            $("#gpsAltitude").text(gpsAltitude.toFixed(0));
             $("#barometerAltitude").text(altitude.toFixed(0));
-
-            $("#status").text(`${altitude.toFixed(2)}ft(${(0.3048 * altitude).toFixed(2)}m) / ${gpsAltitude.toFixed(2)}m`);
         };
 
         function onError(error) {
@@ -400,7 +397,7 @@
         }
 
         function success(position) {
-            gpsAltitude = position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`];
+            gpsAltitude = (position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`]) * 3.28084;
 
             $("#gpsAltitude").text(gpsAltitude.toFixed(0));
 
