@@ -180,7 +180,7 @@
 
     <footer class="footer bg-primary mt-auto">
         <div class="container-fluid text-white p-2">
-            <span id="status">log</span>
+            <span id="status">zoomlevel</span>
         </div>
     </footer>
 
@@ -418,6 +418,23 @@
             console.error(`ERROR(${err.code}): ${err.message}`);
         }
 
+        function updateStatusBar() {
+            var zoomText = "(just magnified)";
+
+            if(map.getZoom() <= 13) {
+                zoomText = "(korea only)";
+            }
+
+            if(map.getZoom() <= 7) {
+                zoomText = "(whole world)";
+            }
+            $("#status").text(`zoomlevel: ${map.getZoom()} ${zoomText}`);
+        }
+
+        function onZoomEnd(e) {
+            updateStatusBar();
+        }
+
         function init() {
             map = L.map('map',
                 {
@@ -425,6 +442,9 @@
                     zoom: 11
                 }
             );
+            updateStatusBar();
+
+            map.on("zoomend", onZoomEnd);
 
             // demo();
 
