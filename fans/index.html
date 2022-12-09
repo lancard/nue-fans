@@ -13,6 +13,7 @@
     <script src="geoid.js"></script>
     <script src="leaflet/leaflet.js"></script>
     <script src="leaflet/leaflet.textpath.js"></script>
+    <script src="leaflet/leaflet.rotatedMarker.js"></script>
     <script src="jquery/jquery-3.6.1.min.js"></script>
 
     <link rel="stylesheet" href="leaflet/leaflet.css" />
@@ -47,6 +48,15 @@
             background-color: black;
             border: solid white;
             line-height: 16px;
+        }
+
+        .airplane-icon {
+            width: 42px;
+            height: 42px;
+            background: none;
+            font-size: 40px;
+            color: red;
+            -webkit-text-stroke: 1px white;
         }
     </style>
 </head>
@@ -189,7 +199,8 @@
 
     <script>
         var map = null;
-        var currentLocationPopup = null;
+        var currentLocationMarker = null;
+        var currentPosition = null;
         const maxBounds = L.latLngBounds(L.latLng([38.84978731237103, 123.56280597193731]), L.latLng([33.02870525087617, 132.84627495139412]));
         var gpsAltitude = 0;
         var fixToCoordMap = {};
@@ -381,18 +392,9 @@
         }
         */
 
-        function updatePosition(latitude, longitude, radius) {
+        function updatePosition(latitude, longitude, radius, heading) {
 
-            const lagLng = L.latLng([latitude, longitude]);
-
-            if (currentLocationPopup == null) {
-                currentLocationPopup = L.circle(lagLng, { radius, color: '#990000', stroke: 'red' })
-                    .bindTooltip(`${latitude}<br>${longitude}`, { direction: "bottom", permanent: true })
-                    .addTo(map);
-            }
-            else {
-                currentLocationPopup.setLatLng(lagLng).setTooltipContent(`${latitude}\u2708<br>${longitude}`).setRadius(radius);
-            }
+            currentLocationMarker.setLatLng([latitude, longitude]).setRotationAngle(heading - 90);
 
             if ($("#trackMyPosition").is(':checked')) {
                 map.panTo([latitude, longitude], { animate: true });
@@ -400,6 +402,7 @@
         }
 
         function success(position) {
+            currentPosition = position;
             gpsAltitude = (position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`]) * 3.28084;
 
             $("#gpsAltitude").text(gpsAltitude.toFixed(0));
@@ -414,7 +417,7 @@
             if (map == null)
                 return;
 
-            updatePosition(position.coords.latitude, position.coords.longitude, position.coords.accuracy);
+            updatePosition(position.coords.latitude, position.coords.longitude, position.coords.accuracy, position.coords.heading);
         }
 
         function error(err) {
@@ -426,14 +429,20 @@
         function updateStatusBar() {
             var zoomText = "(just magnified)";
 
-            if(map.getZoom() <= 13) {
+            if (map.getZoom() <= 13) {
                 zoomText = "(korea only)";
             }
 
-            if(map.getZoom() <= 7) {
+            if (map.getZoom() <= 7) {
                 zoomText = "(whole world)";
             }
-            $("#status").text(`zoomlevel: ${map.getZoom()} ${zoomText}`);
+
+            if(currentPosition == null) {
+                $("#status").text(`zoomlevel: ${map.getZoom()} ${zoomText}`);
+            }
+            else {
+                $("#status").text(`zoomlevel: ${map.getZoom()} ${zoomText} / latlng: ${currentPosition.coords.latitude} ${currentPosition.coords.longitude}`);
+            }
         }
 
         function onZoomEnd(e) {
@@ -448,6 +457,13 @@
                 }
             );
             updateStatusBar();
+
+            currentLocationMarker = L.marker([37.55748666666666, 126.79195416666667], {
+                rotationAngle: 45,
+                rotationOrigin: 'center',
+                icon: L.divIcon({className: 'airplane-icon', html: '\u2708'})
+            })
+            currentLocationMarker.addTo(map);
 
             map.on("zoomend", onZoomEnd);
 
@@ -477,12 +493,12 @@
             if (callsign == "")
                 return;
 
-            $.getJSON('../vatsim-data.json', function (ret) {
+            $.getJSON('https://airplane.mywire.org/vatsim-data.json', function (ret) {
                 ret.pilots.forEach(element => {
                     if (element.callsign != callsign)
                         return;
 
-                    updatePosition(element.latitude, element.longitude, 100);
+                    updatePosition(element.latitude, element.longitude, 100, element.heading);
                     return;
                 });
             });
