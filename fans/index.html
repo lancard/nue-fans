@@ -406,8 +406,18 @@
             gpsAltitude = (position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`]) * 3.28084;
 
             $("#gpsAltitude").text(gpsAltitude.toFixed(0));
-            $("#speed").text(position.coords.speed * 1.94384);
-            $("#heading").text(position.coords.heading);
+            if(position.coords.speed == null) {
+                $("#speed").text('---');
+            }
+            else {
+                $("#speed").text((position.coords.speed * 1.94384).toFixed(0));
+            }
+            if(position.coords.heading == null) {
+                $("#heading").text('---');
+            }
+            else {
+                $("#heading").text(position.coords.heading.toFixed(0));
+            }
 
             var callsign = $("#vatsimCallsign").val();
 
@@ -438,10 +448,10 @@
             }
 
             if(currentPosition == null) {
-                $("#status").text(`zoomlevel: ${map.getZoom()} ${zoomText}`);
+                $("#status").html(`zoomlevel: ${map.getZoom()} ${zoomText}<br>latlng: no data`);
             }
             else {
-                $("#status").text(`zoomlevel: ${map.getZoom()} ${zoomText} / latlng: ${currentPosition.coords.latitude} ${currentPosition.coords.longitude}`);
+                $("#status").html(`zoomlevel: ${map.getZoom()} ${zoomText}<br>latlng: ${currentPosition.coords.latitude} ${currentPosition.coords.longitude}`);
             }
         }
 
