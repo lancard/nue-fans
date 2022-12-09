@@ -52,7 +52,13 @@
         .airplane-icon {
             width: 42px;
             height: 42px;
-            background: none;
+        }
+
+        .airplane-icon-inner {
+            width: 42px;
+            height: 42px;
+            margin-left: -12px;
+            margin-top: -23px;
             font-size: 40px;
             color: red;
             -webkit-text-stroke: 1px white;
@@ -201,6 +207,7 @@
     <script>
         var map = null;
         var currentLocationMarker = null;
+        var currentLocationAccuracyCircle = null;
         var currentPosition = null;
         const maxBounds = L.latLngBounds(L.latLng([38.84978731237103, 123.56280597193731]), L.latLng([33.02870525087617, 132.84627495139412]));
         var gpsAltitude = 0;
@@ -414,6 +421,8 @@
                 return;
 
             currentLocationMarker.setLatLng([position.coords.latitude, position.coords.longitude]).setRotationAngle(position.coords.heading - 90);
+            currentLocationAccuracyCircle.setLatLng([position.coords.latitude, position.coords.longitude]).setRadius(position.coords.accuracy);
+
 
             if ($("#trackMyPosition").is(':checked')) {
                 map.panTo([position.coords.latitude, position.coords.longitude], { animate: true });
@@ -481,15 +490,20 @@
                 }
             );
             updateStatusBar();
+            map.on("zoomend", onZoomEnd);
 
+            // add markers
             currentLocationMarker = L.marker([37.55748666666666, 126.79195416666667], {
                 rotationAngle: 45,
                 rotationOrigin: 'center',
-                icon: L.divIcon({ className: 'airplane-icon', html: '\u2708' })
+                icon: L.divIcon({ className: 'airplane-icon', html: '<div class="airplane-icon-inner">\u2708</div>' })
             })
             currentLocationMarker.addTo(map);
 
-            map.on("zoomend", onZoomEnd);
+            currentLocationAccuracyCircle = L.circle([37.55748666666666, 126.79195416666667], { radius: 100, color: '#990000', stroke: 'red' })
+                    // .bindTooltip(`${latitude}<br>${longitude}`, { direction: "bottom", permanent: true })
+                    .addTo(map);
+
 
             // demo();
 
