@@ -25,7 +25,6 @@
             window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (dirEntry) {
                 storageUri = dirEntry.nativeURL;
 
-                $("#updateButton").attr("disabled", false);
                 $.get('/__cdvfile_files__/fans/version.txt', (ret) => {
                     $("#startButton").attr("disabled", false);
                     $("#firstRunAlert").hide();
@@ -39,10 +38,6 @@
 
                         if (installedVersion != latestVersion) {
                             $("#updateAlert").show();
-                            $("#updateButton").attr("disabled", false);
-                        }
-                        else {
-                            $("#updateButton").attr("disabled", true);
                         }
                     });
                 });
@@ -96,30 +91,28 @@
         <h6>(Free Aviation Navigation System)</h6>
 
         <div class="card border-success mb-3">
-            <div class="card-header bg-success text-white">Start!</div>
+            <div class="card-header bg-success text-white">Navigation Start!</div>
             <div class="card-body">
-                <h4 class="card-title">Navigation Start!</h4>
                 <p class="card-text">To Start Navigation, click this:
                     <button tyle="button" id="startButton" class="btn btn-success"
                         onclick="location.href='/__cdvfile_files__/fans/index.html'" disabled>Start!</button>
                 </p>
-                <div id="firstRunAlert" class="alert alert-danger">
-                    You should download resources at first time. (Click below)
+                <div id="firstRunAlert" class="alert alert-danger small">
+                    download resources to start
                 </div>
-                <div id="currentVersion" class="alert alert-success collapse"></div>
+                <div id="currentVersion" class="alert alert-success small collapse">Installed Version: 1.20221209.1011327</div>
             </div>
         </div>
 
         <div class="card border-info mb-3">
             <div class="card-header bg-info text-white">Download and Update Map &amp; AIRAC</div>
             <div class="card-body">
-                <h4 class="card-title">Update Resources</h4>
                 <p class="card-text">To Update, click this:
-                    <button tyle="button" id="updateButton" class="btn btn-info" onclick="updateResources();" disabled>Update</button>
+                    <button tyle="button" id="updateButton" class="btn btn-info" onclick="updateResources();">Update</button>
                 </p>
-                <div id="latestVersion" class="alert alert-warning collapse"></div>
-                <div id="updateAlert" class="alert alert-warning collapse">
-                    There is a version to update. Click "Update" button.
+                <div id="latestVersion" class="alert alert-warning small collapse">Latest Version: 1.20221209.1011327</div>
+                <div id="updateAlert" class="alert alert-warning small collapse">
+                    Click "Update" button for version up.
                 </div>
             </div>
         </div>
