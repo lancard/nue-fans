@@ -33,7 +33,6 @@
     </script>
     <style>
         nav {
-            height: 60px;
             z-index: 2000;
         }
 
@@ -75,8 +74,10 @@
                         <div class="nav-link">
                             <div class="input-group">
                                 <span class="input-group-text">Track</span>
-                                <div class="form-check form-switch form-control">
-                                    <input class="form-check-input" type="checkbox" id="trackMyPosition">
+                                <div class="form-control">
+                                    <div class="form-switch form-check">
+                                        <input class="form-check-input" type="checkbox" id="trackMyPosition">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -392,42 +393,55 @@
         }
         */
 
-        function updatePosition(latitude, longitude, radius, heading) {
-
-            currentLocationMarker.setLatLng([latitude, longitude]).setRotationAngle(heading - 90);
-
-            if ($("#trackMyPosition").is(':checked')) {
-                map.panTo([latitude, longitude], { animate: true });
-            }
-        }
-
-        function success(position) {
+        function updatePosition(position) {
             currentPosition = position;
-            gpsAltitude = (position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`]) * 3.28084;
 
-            $("#gpsAltitude").text(gpsAltitude.toFixed(0));
-            if(position.coords.speed == null) {
+            $("#gpsAltitude").text(position.coords.altitude.toFixed(0));
+            if (position.coords.speed == null) {
                 $("#speed").text('---');
             }
             else {
-                $("#speed").text((position.coords.speed * 1.94384).toFixed(0));
+                $("#speed").text(position.coords.speed.toFixed(0));
             }
-            if(position.coords.heading == null) {
+            if (position.coords.heading == null) {
                 $("#heading").text('---');
             }
             else {
                 $("#heading").text(position.coords.heading.toFixed(0));
             }
 
-            var callsign = $("#vatsimCallsign").val();
-
-            if (callsign != "")
-                return;
-
             if (map == null)
                 return;
 
-            updatePosition(position.coords.latitude, position.coords.longitude, position.coords.accuracy, position.coords.heading);
+            currentLocationMarker.setLatLng([position.coords.latitude, position.coords.longitude]).setRotationAngle(position.coords.heading - 90);
+
+            if ($("#trackMyPosition").is(':checked')) {
+                map.panTo([position.coords.latitude, position.coords.longitude], { animate: true });
+            }
+
+            updateStatusBar();
+        }
+
+        function success(position) {
+            var obj = {
+                timestamp: position.timestamp,
+                coords: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracy: position.coords.accuracy,
+                    altitudeAccuracy: position.coords.altitudeAccuracy,
+                    heading: position.coords.heading,
+                    altitude: (position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`]) * 3.28084,
+                    speed: position.coords.speed * 1.94384
+                }
+            };
+
+            // VATSIM running
+            var callsign = $("#vatsimCallsign").val();
+            if (callsign != "")
+                return;
+
+            updatePosition(obj);
         }
 
         function error(err) {
@@ -447,7 +461,7 @@
                 zoomText = "(whole world)";
             }
 
-            if(currentPosition == null) {
+            if (currentPosition == null) {
                 $("#status").html(`zoomlevel: ${map.getZoom()} ${zoomText}<br>latlng: no data`);
             }
             else {
@@ -471,7 +485,7 @@
             currentLocationMarker = L.marker([37.55748666666666, 126.79195416666667], {
                 rotationAngle: 45,
                 rotationOrigin: 'center',
-                icon: L.divIcon({className: 'airplane-icon', html: '\u2708'})
+                icon: L.divIcon({ className: 'airplane-icon', html: '\u2708' })
             })
             currentLocationMarker.addTo(map);
 
@@ -496,6 +510,21 @@
             setInterval(updateVatsim, 5000);
         }
 
+        function vatsimElementToCoords(element) {
+            return {
+                timestamp: (new Date()).getTime(),
+                coords: {
+                    latitude: element.latitude,
+                    longitude: element.longitude,
+                    altitude: element.altitude,
+                    accuracy: 100,
+                    altitudeAccuracy: 10,
+                    heading: element.heading,
+                    speed: element.groundspeed
+                }
+            }
+        }
+
 
         function updateVatsim() {
             var callsign = $("#vatsimCallsign").val();
@@ -508,7 +537,7 @@
                     if (element.callsign != callsign)
                         return;
 
-                    updatePosition(element.latitude, element.longitude, 100, element.heading);
+                    updatePosition(vatsimElementToCoords(element));
                     return;
                 });
             });
