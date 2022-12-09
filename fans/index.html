@@ -38,14 +38,15 @@
 
         .altitude-panel {
             position: absolute;
-            width: 180px;
-            padding: 10px;
-            top: 80px;
-            right: 20px;
+            width: 150px;
+            padding: 5px;
+            top: 65px;
+            right: 10px;
             z-index: 1000;
             color: white;
             background-color: black;
             border: solid white;
+            line-height: 16px;
         }
     </style>
 </head>
@@ -86,9 +87,9 @@
     <div id="map" class="flex-grow-1"></div>
 
     <div class="altitude-panel">
-        <div><small>ALT(GPS): <strong><span id="gpsAltitude">0</span></strong> ft</small></div>
-        <div><small>ALT(BARO): <strong><span id="barometerAltitude">0</span></strong> ft</small></div>
-        <select id="stationQNH" class="form-control-sm form-select-sm m-2">
+        <div><small>ALT(GPS): <strong><span id="gpsAltitude">99999</span></strong> ft</small></div>
+        <div><small>ALT(BARO): <strong><span id="barometerAltitude">99999</span></strong> ft</small></div>
+        <select id="stationQNH" class="form-control-sm form-select-sm p-0 m-0">
             <option value="1050">1050 (31.01)</option>
             <option value="1049">1049 (30.98)</option>
             <option value="1048">1048 (30.95)</option>
@@ -176,6 +177,8 @@
             <option value="0966">0966 (28.53)</option>
             <option value="0965">0965 (28.50)</option>
         </select>
+        <div><small>SPD: <strong><span id="speed">999</span></strong> kts</small></div>
+        <div><small>HDG(True): <strong><span id="heading">999</span></strong></small></div>
     </div>
 
     <footer class="footer bg-primary mt-auto">
@@ -400,6 +403,8 @@
             gpsAltitude = (position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`]) * 3.28084;
 
             $("#gpsAltitude").text(gpsAltitude.toFixed(0));
+            $("#speed").text(position.coords.speed * 1.94384);
+            $("#heading").text(position.coords.heading);
 
             var callsign = $("#vatsimCallsign").val();
 
