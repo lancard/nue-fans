@@ -36,19 +36,6 @@
             z-index: 2000;
         }
 
-        .altitude-panel {
-            position: absolute;
-            width: 150px;
-            padding: 5px;
-            top: 65px;
-            right: 10px;
-            z-index: 1000;
-            color: white;
-            background-color: black;
-            border: solid white;
-            line-height: 16px;
-        }
-
         .airplane-icon {
             width: 42px;
             height: 42px;
@@ -62,6 +49,19 @@
             font-size: 40px;
             color: red;
             -webkit-text-stroke: 1px white;
+        }
+
+        .altitude-panel {
+            position: absolute;
+            width: 150px;
+            padding: 5px;
+            top: 5px;
+            right: 5px;
+            z-index: 1000;
+            color: white;
+            background-color: rgba(50, 50, 50, 0.5);
+            border: solid white;
+            line-height: 16px;
         }
     </style>
 </head>
@@ -96,106 +96,157 @@
                             </div>
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <div class="nav-link">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#privacy">Privacy policy</button>
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#credit">Credits</button>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div id="map" class="flex-grow-1"></div>
+    <div id="map" class="flex-grow-1">
+        <div class="altitude-panel">
+            <div><small>ALT(GPS): <strong><span id="gpsAltitude">99999</span></strong> ft</small></div>
+            <div><small>ALT(BARO): <strong><span id="barometerAltitude">99999</span></strong> ft</small></div>
+            <select id="stationQNH" class="form-control-sm form-select-sm p-0 m-0">
+                <option value="1050">1050 (31.01)</option>
+                <option value="1049">1049 (30.98)</option>
+                <option value="1048">1048 (30.95)</option>
+                <option value="1047">1047 (30.92)</option>
+                <option value="1046">1046 (30.89)</option>
+                <option value="1045">1045 (30.86)</option>
+                <option value="1044">1044 (30.83)</option>
+                <option value="1043">1043 (30.80)</option>
+                <option value="1042">1042 (30.77)</option>
+                <option value="1041">1041 (30.74)</option>
+                <option value="1040">1040 (30.71)</option>
+                <option value="1039">1039 (30.68)</option>
+                <option value="1038">1038 (30.65)</option>
+                <option value="1037">1037 (30.62)</option>
+                <option value="1036">1036 (30.59)</option>
+                <option value="1035">1035 (30.56)</option>
+                <option value="1034">1034 (30.53)</option>
+                <option value="1033">1033 (30.50)</option>
+                <option value="1032">1032 (30.47)</option>
+                <option value="1031">1031 (30.45)</option>
+                <option value="1030">1030 (30.42)</option>
+                <option value="1029">1029 (30.39)</option>
+                <option value="1028">1028 (30.36)</option>
+                <option value="1027">1027 (30.33)</option>
+                <option value="1026">1026 (30.30)</option>
+                <option value="1025">1025 (30.27)</option>
+                <option value="1024">1024 (30.24)</option>
+                <option value="1023">1023 (30.21)</option>
+                <option value="1022">1022 (30.18)</option>
+                <option value="1021">1021 (30.15)</option>
+                <option value="1020">1020 (30.12)</option>
+                <option value="1019">1019 (30.09)</option>
+                <option value="1018">1018 (30.06)</option>
+                <option value="1017">1017 (30.03)</option>
+                <option value="1016">1016 (30.00)</option>
+                <option value="1015">1015 (29.97)</option>
+                <option value="1014">1014 (29.94)</option>
+                <option value="1013" selected>1013 (29.91)</option>
+                <option value="1012">1012 (29.88)</option>
+                <option value="1011">1011 (29.85)</option>
+                <option value="1010">1010 (29.83)</option>
+                <option value="1009">1009 (29.80)</option>
+                <option value="1008">1008 (29.77)</option>
+                <option value="1007">1007 (29.74)</option>
+                <option value="1006">1006 (29.71)</option>
+                <option value="1005">1005 (29.68)</option>
+                <option value="1004">1004 (29.65)</option>
+                <option value="1003">1003 (29.62)</option>
+                <option value="1002">1002 (29.59)</option>
+                <option value="1001">1001 (29.56)</option>
+                <option value="1000">1000 (29.53)</option>
+                <option value="0999">0999 (29.50)</option>
+                <option value="0998">0998 (29.47)</option>
+                <option value="0997">0997 (29.44)</option>
+                <option value="0996">0996 (29.41)</option>
+                <option value="0995">0995 (29.38)</option>
+                <option value="0994">0994 (29.35)</option>
+                <option value="0993">0993 (29.32)</option>
+                <option value="0992">0992 (29.29)</option>
+                <option value="0991">0991 (29.26)</option>
+                <option value="0990">0990 (29.23)</option>
+                <option value="0989">0989 (29.21)</option>
+                <option value="0988">0988 (29.18)</option>
+                <option value="0987">0987 (29.15)</option>
+                <option value="0986">0986 (29.12)</option>
+                <option value="0985">0985 (29.09)</option>
+                <option value="0984">0984 (29.06)</option>
+                <option value="0983">0983 (29.03)</option>
+                <option value="0982">0982 (29.00)</option>
+                <option value="0981">0981 (28.97)</option>
+                <option value="0980">0980 (28.94)</option>
+                <option value="0979">0979 (28.91)</option>
+                <option value="0978">0978 (28.88)</option>
+                <option value="0977">0977 (28.85)</option>
+                <option value="0976">0976 (28.82)</option>
+                <option value="0975">0975 (28.79)</option>
+                <option value="0974">0974 (28.76)</option>
+                <option value="0973">0973 (28.73)</option>
+                <option value="0972">0972 (28.70)</option>
+                <option value="0971">0971 (28.67)</option>
+                <option value="0970">0970 (28.64)</option>
+                <option value="0969">0969 (28.61)</option>
+                <option value="0968">0968 (28.59)</option>
+                <option value="0967">0967 (28.56)</option>
+                <option value="0966">0966 (28.53)</option>
+                <option value="0965">0965 (28.50)</option>
+            </select>
+            <div><small>SPD: <strong><span id="speed">999</span></strong> kts</small></div>
+            <div><small>HDG(True): <strong><span id="heading">999</span></strong></small></div>
+        </div>
+    </div>
 
-    <div class="altitude-panel">
-        <div><small>ALT(GPS): <strong><span id="gpsAltitude">99999</span></strong> ft</small></div>
-        <div><small>ALT(BARO): <strong><span id="barometerAltitude">99999</span></strong> ft</small></div>
-        <select id="stationQNH" class="form-control-sm form-select-sm p-0 m-0">
-            <option value="1050">1050 (31.01)</option>
-            <option value="1049">1049 (30.98)</option>
-            <option value="1048">1048 (30.95)</option>
-            <option value="1047">1047 (30.92)</option>
-            <option value="1046">1046 (30.89)</option>
-            <option value="1045">1045 (30.86)</option>
-            <option value="1044">1044 (30.83)</option>
-            <option value="1043">1043 (30.80)</option>
-            <option value="1042">1042 (30.77)</option>
-            <option value="1041">1041 (30.74)</option>
-            <option value="1040">1040 (30.71)</option>
-            <option value="1039">1039 (30.68)</option>
-            <option value="1038">1038 (30.65)</option>
-            <option value="1037">1037 (30.62)</option>
-            <option value="1036">1036 (30.59)</option>
-            <option value="1035">1035 (30.56)</option>
-            <option value="1034">1034 (30.53)</option>
-            <option value="1033">1033 (30.50)</option>
-            <option value="1032">1032 (30.47)</option>
-            <option value="1031">1031 (30.45)</option>
-            <option value="1030">1030 (30.42)</option>
-            <option value="1029">1029 (30.39)</option>
-            <option value="1028">1028 (30.36)</option>
-            <option value="1027">1027 (30.33)</option>
-            <option value="1026">1026 (30.30)</option>
-            <option value="1025">1025 (30.27)</option>
-            <option value="1024">1024 (30.24)</option>
-            <option value="1023">1023 (30.21)</option>
-            <option value="1022">1022 (30.18)</option>
-            <option value="1021">1021 (30.15)</option>
-            <option value="1020">1020 (30.12)</option>
-            <option value="1019">1019 (30.09)</option>
-            <option value="1018">1018 (30.06)</option>
-            <option value="1017">1017 (30.03)</option>
-            <option value="1016">1016 (30.00)</option>
-            <option value="1015">1015 (29.97)</option>
-            <option value="1014">1014 (29.94)</option>
-            <option value="1013" selected>1013 (29.91)</option>
-            <option value="1012">1012 (29.88)</option>
-            <option value="1011">1011 (29.85)</option>
-            <option value="1010">1010 (29.83)</option>
-            <option value="1009">1009 (29.80)</option>
-            <option value="1008">1008 (29.77)</option>
-            <option value="1007">1007 (29.74)</option>
-            <option value="1006">1006 (29.71)</option>
-            <option value="1005">1005 (29.68)</option>
-            <option value="1004">1004 (29.65)</option>
-            <option value="1003">1003 (29.62)</option>
-            <option value="1002">1002 (29.59)</option>
-            <option value="1001">1001 (29.56)</option>
-            <option value="1000">1000 (29.53)</option>
-            <option value="0999">0999 (29.50)</option>
-            <option value="0998">0998 (29.47)</option>
-            <option value="0997">0997 (29.44)</option>
-            <option value="0996">0996 (29.41)</option>
-            <option value="0995">0995 (29.38)</option>
-            <option value="0994">0994 (29.35)</option>
-            <option value="0993">0993 (29.32)</option>
-            <option value="0992">0992 (29.29)</option>
-            <option value="0991">0991 (29.26)</option>
-            <option value="0990">0990 (29.23)</option>
-            <option value="0989">0989 (29.21)</option>
-            <option value="0988">0988 (29.18)</option>
-            <option value="0987">0987 (29.15)</option>
-            <option value="0986">0986 (29.12)</option>
-            <option value="0985">0985 (29.09)</option>
-            <option value="0984">0984 (29.06)</option>
-            <option value="0983">0983 (29.03)</option>
-            <option value="0982">0982 (29.00)</option>
-            <option value="0981">0981 (28.97)</option>
-            <option value="0980">0980 (28.94)</option>
-            <option value="0979">0979 (28.91)</option>
-            <option value="0978">0978 (28.88)</option>
-            <option value="0977">0977 (28.85)</option>
-            <option value="0976">0976 (28.82)</option>
-            <option value="0975">0975 (28.79)</option>
-            <option value="0974">0974 (28.76)</option>
-            <option value="0973">0973 (28.73)</option>
-            <option value="0972">0972 (28.70)</option>
-            <option value="0971">0971 (28.67)</option>
-            <option value="0970">0970 (28.64)</option>
-            <option value="0969">0969 (28.61)</option>
-            <option value="0968">0968 (28.59)</option>
-            <option value="0967">0967 (28.56)</option>
-            <option value="0966">0966 (28.53)</option>
-            <option value="0965">0965 (28.50)</option>
-        </select>
-        <div><small>SPD: <strong><span id="speed">999</span></strong> kts</small></div>
-        <div><small>HDG(True): <strong><span id="heading">999</span></strong></small></div>
+    <!-- Privacy Modal -->
+    <div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="privacyModalLabel">Privacy Policy</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>This program does not collect any personal information.</p>
+                    <p>Any personal information that has not been discussed in advance will be destroyed without delay if the collection is confirmed.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credit Modal -->
+    <div class="modal fade" id="credit" tabindex="-1" aria-labelledby="creditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="creditModalLabel">Credits</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li><a href="https://www.flaticon.com/free-icons/airplane" title="airplane icons">Airplane icons created by Mihimihi - Flaticon</a></li>
+                        <li><a href="https://cordova.apache.org/">Apache Cordova</a></li>
+                        <li><a href="https://jquery.com/">jQuery</a></li>
+                        <li><a href="https://day.js.org/">dayjs</a></li>
+                        <li><a href="https://getbootstrap.com/">bootstrap</a></li>
+                        <li><a href="https://leafletjs.com/">leaflet</a></li>                        
+                        <li><a href="https://www.openstreetmap.org/">openstreetmap</a></li>                        
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="footer bg-primary mt-auto">
@@ -501,8 +552,8 @@
             currentLocationMarker.addTo(map);
 
             currentLocationAccuracyCircle = L.circle([37.55748666666666, 126.79195416666667], { radius: 100, color: '#990000', stroke: 'red' })
-                    // .bindTooltip(`${latitude}<br>${longitude}`, { direction: "bottom", permanent: true })
-                    .addTo(map);
+                // .bindTooltip(`${latitude}<br>${longitude}`, { direction: "bottom", permanent: true })
+                .addTo(map);
 
 
             // demo();
