@@ -201,7 +201,8 @@
                 <option value="0965">0965 (28.50)</option>
             </select>
             <div><small>SPD: <strong><span id="speed">999</span></strong> kts</small></div>
-            <div><small>TRK(True): <strong><span id="heading">999</span></strong></small></div>
+            <div><small>TRK(GPS/True): <strong><span id="track">999</span></strong></small></div>
+            <div><small>HDG(Compass/Mag): <strong><span id="heading">999</span></strong></small></div>
         </div>
     </div>
 
@@ -485,10 +486,10 @@
                 $("#speed").text(position.coords.speed.toFixed(0));
             }
             if (position.coords.heading == null) {
-                $("#heading").text('---');
+                $("#track").text('---');
             }
             else {
-                $("#heading").text(position.coords.heading.toFixed(0));
+                $("#track").text(position.coords.heading.toFixed(0));
             }
 
             if (map == null)
@@ -593,7 +594,10 @@
                 maximumAge: 0
             };
 
-            var id = navigator.geolocation.watchPosition(success, error, options);
+            navigator.geolocation.watchPosition(success, error, options);
+            window.addEventListener('deviceorientation', (eventData) => {
+                $("#heading").text(eventData.alpha.toFixed(0));
+            });
 
             setInterval(updateVatsim, 5000);
         }
