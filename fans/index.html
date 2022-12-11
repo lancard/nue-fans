@@ -92,15 +92,18 @@
                         <div class="nav-link">
                             <div class="input-group">
                                 <span class="input-group-text">VATSIM C/S</span>
-                                <input type="text" class="form-control" id="vatsimCallsign">
+                                <input type="text" class="form-control" id="vatsimCallsign" size="9">
                             </div>
                         </div>
                     </li>
                     <li class="nav-item">
                         <div class="nav-link">
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#privacy">Privacy policy</button>
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#credit">Credits</button>
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#termsOfUse">Terms of use</button>
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#privacy">Privacy policy</button>
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#credit">Credits</button>
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#termsOfUse">Terms of use</button>
                         </div>
                     </li>
                 </ul>
@@ -112,7 +115,8 @@
         <div class="altitude-panel">
             <div><small>ALT(GPS): <strong><span id="gpsAltitude">99999</span></strong> ft</small></div>
             <div><small>ALT(BARO): <strong><span id="barometerAltitude">99999</span></strong> ft</small></div>
-            <select id="stationQNH" class="form-control-sm form-select-sm p-0 m-0">
+            <select id="stationQNH" class="form-control-sm form-select-sm p-0 m-0"
+                onchange="localStorage.setItem('qnh', $('#stationQNH').val());">
                 <option value="1050">1050 (31.01)</option>
                 <option value="1049">1049 (30.98)</option>
                 <option value="1048">1048 (30.95)</option>
@@ -200,9 +204,9 @@
                 <option value="0966">0966 (28.53)</option>
                 <option value="0965">0965 (28.50)</option>
             </select>
-            <div><small>SPD: <strong><span id="speed">999</span></strong> kts</small></div>
-            <div><small>TRK(GPS/True): <strong><span id="track">999</span></strong></small></div>
-            <div><small>HDG(Compass/Mag): <strong><span id="heading">999</span></strong></small></div>
+            <div><small>SPD: <strong><span id="speed">---</span></strong> kts</small></div>
+            <div><small>TRK(GPS/True): <strong><span id="track">---</span></strong></small></div>
+            <div><small>HDG(Compass/Mag): <strong><span id="heading">---</span></strong></small></div>
         </div>
     </div>
 
@@ -216,7 +220,8 @@
                 </div>
                 <div class="modal-body">
                     <p>This program does not collect any personal information.</p>
-                    <p>Any personal information that has not been discussed in advance will be destroyed without delay if the collection is confirmed.</p>
+                    <p>Any personal information that has not been discussed in advance will be destroyed without delay
+                        if the collection is confirmed.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -235,13 +240,14 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li><a href="https://www.flaticon.com/free-icons/airplane" title="airplane icons">Airplane icons created by Mihimihi - Flaticon</a></li>
+                        <li><a href="https://www.flaticon.com/free-icons/airplane" title="airplane icons">Airplane icons
+                                created by Mihimihi - Flaticon</a></li>
                         <li><a href="https://cordova.apache.org/">Apache Cordova</a></li>
                         <li><a href="https://jquery.com/">jQuery</a></li>
                         <li><a href="https://day.js.org/">dayjs</a></li>
                         <li><a href="https://getbootstrap.com/">bootstrap</a></li>
-                        <li><a href="https://leafletjs.com/">leaflet</a></li>                        
-                        <li><a href="https://www.openstreetmap.org/">openstreetmap</a></li>                        
+                        <li><a href="https://leafletjs.com/">leaflet</a></li>
+                        <li><a href="https://www.openstreetmap.org/">openstreetmap</a></li>
                     </ul>
                 </div>
                 <div class="modal-footer">
@@ -271,7 +277,7 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 
     <footer class="footer bg-primary mt-auto">
         <div class="container-fluid text-white p-2">
@@ -558,6 +564,10 @@
         }
 
         function init() {
+            if (localStorage.getItem('qnh')) {
+                $("#stationQNH").val(localStorage.getItem('qnh'));
+            }
+
             map = L.map('map',
                 {
                     center: [37.55748666666666, 126.79195416666667],
