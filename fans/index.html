@@ -15,6 +15,7 @@
     <script src="leaflet/leaflet.textpath.js"></script>
     <script src="leaflet/leaflet.rotatedMarker.js"></script>
     <script src="jquery/jquery-3.6.1.min.js"></script>
+    <script src="metarparser/metarParser.js"></script>
 
     <link rel="stylesheet" href="leaflet/leaflet.css" />
     <script>
@@ -34,6 +35,10 @@
     <style>
         nav {
             z-index: 2000;
+        }
+
+        #stationQNH {
+            font-size: 10px;
         }
 
         .airplane-icon {
@@ -98,6 +103,8 @@
                     </li>
                     <li class="nav-item">
                         <div class="nav-link">
+                            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                data-bs-target="#metar">METAR</button>
                             <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
                                 data-bs-target="#privacy">Privacy policy</button>
                             <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
@@ -204,9 +211,28 @@
                 <option value="0966">0966 (28.53)</option>
                 <option value="0965">0965 (28.50)</option>
             </select>
+            <div class="collapse"><small>QNH(RKSS): <strong><span id="airportQNH">---</span></strong> kts</small></div>
             <div><small>SPD: <strong><span id="speed">---</span></strong> kts</small></div>
             <div><small>TRK(GPS/True): <strong><span id="track">---</span></strong></small></div>
             <div><small>HDG(Compass/Mag): <strong><span id="heading">---</span></strong></small></div>
+        </div>
+    </div>
+
+    <!-- METAR Modal -->
+    <div class="modal fade" id="metar" tabindex="-1" aria-labelledby="metarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="metarModalLabel">METAR</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="metarBody"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -610,6 +636,9 @@
             });
 
             setInterval(updateVatsim, 5000);
+            updateMetarFromLocalStroage();
+            updateMetar();
+            setInterval(updateMetar, 10 * 60000); // 10 minutes
         }
 
         function vatsimElementToCoords(element) {
@@ -627,6 +656,25 @@
             }
         }
 
+        function updateMetarFromLocalStroage() {
+            $("#metarBody").text(localStorage.getItem("metar"));
+        }
+
+        function updateMetar() {
+            $.getJSON('https://airplane.mywire.org/metar.json', function (ret) {
+                var metarList = "";
+                for (var airport in ret) {
+                    if (airport == "RKSS") {
+                        var metarObject = metarParser(ret[airport].metar);
+                        $("#airportQNH").text(metarObject.altimeter.millibars);
+                        $("#airportQNH").parents("div").show();
+                    }
+                    metarList += `${airport}: ${ret[airport].metar}\n`;
+                }
+                localStorage.setItem("metar", metarList);
+                updateMetarFromLocalStroage();
+            });
+        }
 
         function updateVatsim() {
             var callsign = $("#vatsimCallsign").val();
