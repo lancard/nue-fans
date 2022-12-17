@@ -68,6 +68,39 @@
             border: solid white;
             line-height: 16px;
         }
+
+        .speed-indicator {
+            position: absolute;
+            z-index: 1000;
+            font-size: 7vw;
+            bottom: 15px;
+            left: 10px;
+            color: red;
+            font-weight: bold;
+            text-shadow: 2px 2px 3px pink;
+        }
+
+        .altitude-indicator {
+            position: absolute;
+            z-index: 1000;
+            font-size: 7vw;
+            bottom: 15px;
+            right: 10px;
+            color: red;
+            font-weight: bold;
+            text-shadow: 2px 2px 3px pink;
+        }
+
+        .heading-indicator {
+            position: absolute;
+            z-index: 1000;
+            font-size: 7vw;
+            bottom: 15px;
+            right: 45vw;
+            color: chartreuse;
+            font-weight: bold;
+            text-shadow: 2px 2px 3px green;
+        }
     </style>
 </head>
 
@@ -80,45 +113,31 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <div class="nav-link">
-                            <div class="input-group">
-                                <span class="input-group-text">Track</span>
-                                <div class="form-control">
-                                    <div class="form-switch form-check">
-                                        <input class="form-check-input" type="checkbox" id="trackMyPosition">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link">
-                            <div class="input-group">
-                                <span class="input-group-text">VATSIM C/S</span>
-                                <input type="text" class="form-control" id="vatsimCallsign" size="9">
-                            </div>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link">
-                            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                data-bs-target="#metar">METAR</button>
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#privacy">PrivacyPolicy</button>
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#credit">Credits</button>
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#termsOfUse">EULA</button>
-                        </div>
-                    </li>
-                </ul>
+                <div class="m-2">
+                    <div class="m-2">
+                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                            data-bs-target="#metar">METAR</button>
+                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                            data-bs-target="#option">OPTION</button>
+                    </div>
+                    <div class="m-2">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#privacy">PrivacyPolicy</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#credit">Credits</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#termsOfUse">EULA</button>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
     <div id="map" class="flex-grow-1">
+        <div class="speed-indicator"><strong><span id="speed">---</span></strong> <small>kts(GS)</small></div>
+        <div class="heading-indicator"><strong><span id="heading">---</span></strong></div>
+        <div class="altitude-indicator"><strong><span id="altitude">---</span></strong> <small>ft</small></div>
+
         <div class="altitude-panel">
             <div><small>ALT(GPS): <strong><span id="gpsAltitude">99999</span></strong> ft</small></div>
             <div><small>ALT(BARO): <strong><span id="barometerAltitude">99999</span></strong> ft</small></div>
@@ -212,14 +231,66 @@
                 <option value="0965">0965 (28.50)</option>
             </select>
             <div class="collapse"><small>QNH(RKSS): <strong><span id="airportQNH">---</span></strong></small></div>
-            <div><small>SPD: <strong><span id="speed">---</span></strong> kts</small></div>
-            <div><small>TRK(GPS/True): <strong><span id="track">---</span></strong></small></div>
-            <div><small>HDG(Compass/Mag): <strong><span id="heading">---</span></strong></small></div>
+            <div><small>Latitude: <strong><span id="latitude">--.------</span></strong></small></div>
+            <div><small>Longitude: <strong><span id="longitude">---.------</span></strong></small></div>
+        </div>
+    </div>
+
+    <!-- Option Modal -->
+    <div class="modal fade" id="option" tabindex="-1" aria-labelledby="optionModalLabel" aria-hidden="true"
+        style="z-index: 10000">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="optionModalLabel">OPTION</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="input-group-text">Track my position</span>
+                        <div class="form-control">
+                            <div class="form-switch form-check">
+                                <input class="form-check-input" type="checkbox" id="trackMyPosition" checked>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Show altitude by</span>
+                        <div class="form-control">
+                            <span>GPS</span>
+                            <div class="form-switch form-check d-inline-flex">
+                                <input class="form-check-input" type="checkbox" id="altitudeByBarometer">
+                            </div>
+                            <span>BARO</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Show HDG by</span>
+                        <select id="hdgBy" class="form-control form-select">
+                            <option value="gpsWithMagVar">GPS TRK WITH MAG VAR (Magnetic North)</option>
+                            <option value="gps">GPS TRK (True North)</option>
+                            <option value="compass">Compass (Magnetic North)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Magnetic Variation</span>
+                        <input type="text" class="form-control" id="magneticVariation" value="-8">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">VATSIM C/S</span>
+                        <input type="text" class="form-control" id="vatsimCallsign" size="9">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- METAR Modal -->
-    <div class="modal fade" id="metar" tabindex="-1" aria-labelledby="metarModalLabel" aria-hidden="true">
+    <div class="modal fade" id="metar" tabindex="-1" aria-labelledby="metarModalLabel" aria-hidden="true"
+        style="z-index: 10000">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -237,7 +308,8 @@
     </div>
 
     <!-- Privacy Modal -->
-    <div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true"
+        style="z-index: 10000">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -257,7 +329,8 @@
     </div>
 
     <!-- Credit Modal -->
-    <div class="modal fade" id="credit" tabindex="-1" aria-labelledby="creditModalLabel" aria-hidden="true">
+    <div class="modal fade" id="credit" tabindex="-1" aria-labelledby="creditModalLabel" aria-hidden="true"
+        style="z-index: 10000">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -284,7 +357,8 @@
     </div>
 
     <!-- Terms of use -->
-    <div class="modal fade" id="termsOfUse" tabindex="-1" aria-labelledby="termsOfUseModalLabel" aria-hidden="true">
+    <div class="modal fade" id="termsOfUse" tabindex="-1" aria-labelledby="termsOfUseModalLabel" aria-hidden="true"
+        style="z-index: 10000">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -329,6 +403,10 @@
             const altitude = getIndicatedAltitude(values, +$("#stationQNH").val());
 
             $("#barometerAltitude").text(altitude.toFixed(0));
+
+            if ($("#altitudeByBarometer").is(':checked')) {
+                $("#altitude").text(altitude.toFixed(0));
+            }
         };
 
         function onError(error) {
@@ -511,18 +589,20 @@
             currentPosition = position;
 
             $("#gpsAltitude").text(position.coords.altitude.toFixed(0));
-            if (position.coords.speed == null) {
-                $("#speed").text('---');
+            if (!$("#altitudeByBarometer").is(':checked')) {
+                $("#altitude").text(position.coords.altitude.toFixed(0));
             }
-            else {
-                $("#speed").text(position.coords.speed.toFixed(0));
+            $("#speed").text(position.coords.speed.toFixed(0));
+
+            if ($("#hdgBy").val() == "gpsWithMagVar") {
+                $("#heading").text((position.coords.heading - +$("#magneticVariation").val()).toFixed(0));
             }
-            if (position.coords.heading == null) {
-                $("#track").text('---');
+            if ($("#hdgBy").val() == "gps") {
+                $("#heading").text(position.coords.heading.toFixed(0));
             }
-            else {
-                $("#track").text(position.coords.heading.toFixed(0));
-            }
+
+            $("#latitude").text(position.coords.latitude);
+            $("#longitude").text(position.coords.longitude);
 
             if (map == null)
                 return;
@@ -546,11 +626,12 @@
                     longitude: position.coords.longitude,
                     accuracy: position.coords.accuracy,
                     altitudeAccuracy: position.coords.altitudeAccuracy,
-                    heading: position.coords.heading,
+                    heading: (position.coords.heading == null ? localStorage.getItem("heading") : position.coords.heading),
                     altitude: (position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`]) * 3.28084,
-                    speed: position.coords.speed * 1.94384
+                    speed: (position.coords.speed == null ? 0 : position.coords.speed * 1.94384)
                 }
             };
+            localStorage.setItem("heading", position.coords.heading);
 
             // VATSIM running
             var callsign = $("#vatsimCallsign").val();
@@ -578,15 +659,21 @@
             }
 
             if (currentPosition == null) {
-                $("#status").html(`zoomlevel: ${map.getZoom()} ${zoomText}<br>latlng: no data`);
+                $("#status").html(`zoomlevel: ${map.getZoom()} ${zoomText}`);
             }
             else {
-                $("#status").html(`zoomlevel: ${map.getZoom()} ${zoomText}<br>latlng: ${currentPosition.coords.latitude} ${currentPosition.coords.longitude}`);
+                $("#status").html(`zoomlevel: ${map.getZoom()} ${zoomText}`);
             }
         }
 
         function onZoomEnd(e) {
             updateStatusBar();
+        }
+
+        function updateCompassHeading(eventData) {
+            if ($("#hdgBy").val() == "compass") {
+                $("#heading").text(eventData.alpha.toFixed(0));
+            }
         }
 
         function init() {
@@ -631,9 +718,12 @@
             };
 
             navigator.geolocation.watchPosition(success, error, options);
-            window.addEventListener('deviceorientation', (eventData) => {
-                $("#heading").text(eventData.alpha.toFixed(0));
-            });
+            window.addEventListener('deviceorientation', updateCompassHeading);
+            setInterval(() => {
+                window.removeEventListener('deviceorientation', updateCompassHeading);
+                window.addEventListener('deviceorientation', updateCompassHeading);
+            }, 60 * 1000); // 1 minutes
+
 
             setInterval(updateVatsim, 5000);
             updateMetarFromLocalStroage();
