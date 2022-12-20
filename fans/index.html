@@ -232,7 +232,10 @@
                 <option value="0966">0966 (28.53)</option>
                 <option value="0965">0965 (28.50)</option>
             </select>
-            <div class="collapse"><small>QNH(RKSS): <strong><span id="airportQNH">---</span></strong></small></div>
+            <div class="collapse"><small>QNH(RKSS): <strong><span id="airportQNH">---</span></strong></small>
+                <button class="btn btn-sm btn-light p-0 m-0"
+                    onclick='$("#stationQNH").val($("#airportQNH").text())'>set</button>
+            </div>
             <div><small>Latitude: <strong><span id="latitude">--.------</span></strong></small></div>
             <div><small>Longitude: <strong><span id="longitude">---.------</span></strong></small></div>
         </div>
@@ -785,7 +788,7 @@
                 map.removeLayer(e[0]);
                 map.removeLayer(e[1]);
             });
-            
+
             drawnRadialList = [];
         }
 
