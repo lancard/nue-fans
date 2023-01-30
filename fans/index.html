@@ -47,11 +47,11 @@
         }
 
         .airplane-icon-inner {
-            width: 42px;
-            height: 42px;
-            margin-left: -12px;
-            margin-top: -23px;
-            font-size: 32px;
+            width: 26px;
+            height: 26px;
+            margin-left: -9px;
+            margin-top: -6px;
+            font-size: 20px;
             color: red;
             -webkit-text-stroke: 1px white;
         }
@@ -125,6 +125,8 @@
                             data-bs-target="#radial">RADIAL/DME</button>
                         <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
                             data-bs-target="#sidstar">SID/STAR</button>
+                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                            data-bs-target="#addfix">Add Custom Fix</button>
                     </div>
                     <div class="m-2">
                         <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
@@ -238,7 +240,7 @@
             </select>
             <div class="collapse"><small>QNH(RKSS): <strong><span id="airportQNH">---</span></strong></small>
                 <button class="btn btn-sm btn-light p-0 m-0"
-                    onclick='$("#stationQNH").val($("#airportQNH").text())'>set</button>
+                    onclick='$("#stationQNH").val($("#airportQNH").text()); localStorage.setItem("qnh", $("#stationQNH").val());'>set</button>
             </div>
             <div><small>Latitude: <strong><span id="latitude">--.------</span></strong></small></div>
             <div><small>Longitude: <strong><span id="longitude">---.------</span></strong></small></div>
@@ -367,6 +369,36 @@
         </div>
     </div>
 
+    <!-- Add Custom Fix -->
+    <div class="modal fade" id="addfix" tabindex="-1" aria-labelledby="addfixModalLabel" aria-hidden="true"
+        style="z-index: 10000">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addfixModalLabel">ADD CUSTOM FIX (save in download dir)</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="input-group-text">FIX NAME</span>
+                        <input type="text" class="form-control" id="addfixName" value="HELLO">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Latitude</span>
+                        <input type="text" class="form-control" id="addfixLatitude" value="38.12345">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Longitude</span>
+                        <input type="text" class="form-control" id="addfixLongitude" value="128.12345">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Save permanently</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Privacy Modal -->
     <div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true"
         style="z-index: 10000">
@@ -456,6 +488,71 @@
         var airwayUsedFix = {};
         var drawnRadialList = [];
         var drawnProcedureList = [];
+        var customFixMap = {};
+        const configFileName = "nuefans-config.json";
+
+        function addCustomFix(name, latitude, longitude) {
+            // check already exist
+            if (window.navaidMap[name]) {
+                alert('already exist!');
+                return;
+            }
+
+            // add to navaidMap
+            window.navaidMap[name] = {
+                name: name,
+                latitude: latitude,
+                longitude: longitude
+            }
+
+            // add to custom Fix Map
+            customFixMap[name] = window.navaidMap[name];
+
+            // add marker
+            var customFixMarker = L.marker([latitude, longitude], {
+                rotationOrigin: 'center',
+                icon: L.divIcon({ className: 'airplane-icon', html: `<div class="airplane-icon-inner">${name}</div>` })
+            })
+            customFixMarker.addTo(map);
+        }
+
+        function addCustomFixAndSave() {
+            addCustomFix($("#addfixName").val(), $("#addfixLatitude").val(), $("#addfixLongitude").val());
+
+            writeFile(configFileName, JSON.stringify(customFixMap, null, '\t'));
+        }
+
+        function writeFile(filename, contents) {
+            try {
+                window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory + 'download/', function (dir) {
+                    dir.getFile(filename, { create: true }, function (file) {
+                        file.createWriter(function (fileWriter) {
+                            var blob = new Blob([contents], { type: "text/plain" });
+                            fileWriter.write(blob);
+                        });
+                    });
+                });
+            }
+            catch (e) {
+                console.dir(e);
+            }
+        }
+
+        function readFile(filename, callback) {
+            window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory + 'download/' + filename, function (fileEntry) {
+                fileEntry.file(function (file) {
+                    var reader = new FileReader();
+                    reader.onloadend = function (e) {
+                        try {
+                            callback(this.result);
+                        } catch (e) {
+                            console.dir(e);
+                        }
+                    }
+                    reader.readAsText(file);
+                });
+            });
+        }
 
         function getIndicatedAltitude(mb, qnh) {
             return 145366.45 * (Math.pow(qnh / 1013.25, 0.190284) - Math.pow(mb / 1013.25, 0.190284))
@@ -483,169 +580,6 @@
 
             setInterval(function () { sensors.getState(onSuccess, onError) }, 1000);
         }, false);
-
-        /*
-        function demo() {
-            var wind = L.polyline([[59.3556, -31.99219], [55.17887, -42.89062], [47.7541, -43.94531], [38.27269, -37.96875], [27.05913, -41.13281], [16.29905, -36.5625], [8.40717, -30.23437], [1.05463, -22.5], [-8.75479, -18.28125], [-21.61658, -20.03906], [-31.35364, -24.25781], [-39.90974, -30.9375], [-43.83453, -41.13281], [-47.7541, -49.92187], [-50.95843, -54.14062], [-55.9738, -56.60156]], {
-                weight: 15,
-                color: '#8EE9FF'
-            }).addTo(map);
-
-            wind.setText(') ', {
-                repeat: true,
-                offset: 7,
-                attributes: {
-                    fill: '#007DEF',
-                    'font-weight': 'bold',
-                    'font-size': '24'
-                }
-            });
-
-            var danger = L.polyline([[-40.311, -31.952], [-12.086, -18.727]], {
-                weight: 10,
-                color: 'orange',
-                opacity: 0.8
-            }).addTo(map);
-            danger.setText('\u25BA', {
-                repeat: true,
-                offset: 6,
-                attributes: { fill: 'red' }
-            });
-
-            var plane = L.polyline([[-49.38237, -37.26562], [-1.75754, -14.41406], [51.61802, -23.20312]], {
-                weight: 1,
-                color: 'black',
-                dashArray: '2, 2'
-            }).addTo(map);
-            plane.setText('\u2708     ', {
-                repeat: true,
-                offset: 8,
-                attributes: {
-                    'font-weight': 'bold',
-                    'font-size': '24'
-                }
-            });
-
-            var flightsWE = {
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "type": "Feature",
-                        "properties": {
-                            "flight": "To New Delhi"
-                        },
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [
-                                [
-                                    3.33984375,
-                                    46.6795944656402
-                                ],
-                                [
-                                    29.53125,
-                                    46.55886030311719
-                                ],
-                                [
-                                    51.328125,
-                                    42.293564192170095
-                                ],
-                                [
-                                    68.5546875,
-                                    35.746512259918504
-                                ],
-                                [
-                                    76.81640625,
-                                    28.65203063036226
-                                ]
-                            ]
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "properties": {
-                            "flight": "To Hanoi"
-                        },
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [
-                                [
-                                    77.607421875,
-                                    28.767659105691255
-                                ],
-                                [
-                                    88.72558593749999,
-                                    27.839076094777816
-                                ],
-                                [
-                                    97.3828125,
-                                    25.681137335685307
-                                ],
-                                [
-                                    105.77636718749999,
-                                    21.248422235627014
-                                ]
-                            ]
-                        }
-                    }
-                ]
-            };
-
-            var flightsEW = {
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "type": "Feature",
-                        "properties": {
-                            "flight": "To Bangkok"
-                        },
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [
-                                [
-                                    106.67724609375,
-                                    10.790140750321738
-                                ],
-                                [
-                                    104.08447265624999,
-                                    11.523087506868514
-                                ],
-                                [
-                                    102.1728515625,
-                                    12.254127737657381
-                                ],
-                                [
-                                    100.45898437499999,
-                                    13.667338259654947
-                                ]
-                            ]
-                        }
-                    }
-                ]
-            };
-
-            L.geoJson(flightsWE, {
-                onEachFeature: function (feature, layer) {
-                    layer.setText(feature.properties.flight, { offset: -5 });
-                },
-                style: {
-                    weight: 3,
-                    color: 'purple',
-                    dashArray: '4, 4'
-                }
-            }).addTo(map);
-
-            L.geoJson(flightsEW, {
-                onEachFeature: function (feature, layer) {
-                    layer.setText(feature.properties.flight, { offset: -5, orientation: 'flip' });
-                },
-                style: {
-                    weight: 3,
-                    color: 'purple',
-                    dashArray: '4, 4'
-                }
-            }).addTo(map);
-        }
-        */
 
         function updatePosition(position) {
             currentPosition = position;
@@ -948,6 +882,21 @@
                 $("#sidstar").find("button.btn-success").on('click', drawProcedure);
                 $("#sidstar").find("button.btn-danger").on('click', deleteAllProcedure);
             });
+
+            // event handler
+            readFile(configFileName, function (ret) {
+                customFixMap = JSON.parse(ret);
+
+                if (!customFixMap) {
+                    customFixMap = {};
+                }
+
+                for(var name in customFixMap) {
+                    addCustomFix(name, customFixMap[name].latitude, customFixMap[name].longitude);
+                }
+            });
+
+            $("#addfix").find("button.btn-success").on('click', addCustomFixAndSave);
         }
 
         function vatsimElementToCoords(element) {
