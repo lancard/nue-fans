@@ -41,6 +41,16 @@
             font-size: 10px;
         }
 
+        .custom-fix {
+            font-size: 9pt;
+        }
+
+        .custom-fix-inner {
+            font-size: 9pt;
+            color: blue;
+            text-shadow: 2px 2px 3px black;
+        }
+
         .airplane-icon {
             width: 42px;
             height: 42px;
@@ -115,25 +125,25 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <div class="m-2">
                     <div class="m-2">
-                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm p-1 btn-success" data-bs-toggle="modal"
                             data-bs-target="#metar">METAR</button>
-                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm p-1 btn-warning" data-bs-toggle="modal"
                             data-bs-target="#option">OPTION</button>
                     </div>
                     <div class="m-2">
-                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm p-1 btn-info" data-bs-toggle="modal"
                             data-bs-target="#radial">RADIAL/DME</button>
-                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm p-1 btn-info" data-bs-toggle="modal"
                             data-bs-target="#sidstar">SID/STAR</button>
-                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm p-1 btn-info" data-bs-toggle="modal"
                             data-bs-target="#addfix">Add Custom Fix</button>
                     </div>
                     <div class="m-2">
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm p-1 btn-secondary" data-bs-toggle="modal"
                             data-bs-target="#privacy">PrivacyPolicy</button>
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm p-1 btn-secondary" data-bs-toggle="modal"
                             data-bs-target="#credit">Credits</button>
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-sm p-1 btn-secondary" data-bs-toggle="modal"
                             data-bs-target="#termsOfUse">EULA</button>
                     </div>
                 </div>
@@ -509,11 +519,14 @@
             customFixMap[name] = window.navaidMap[name];
 
             // add marker
+            var customFixCircle = L.circle([latitude, longitude], {
+                radius: 10, color: '#000099', stroke: 'blue'
+            }).addTo(map);
+
             var customFixMarker = L.marker([latitude, longitude], {
                 rotationOrigin: 'center',
-                icon: L.divIcon({ className: 'airplane-icon', html: `<div class="airplane-icon-inner">${name}</div>` })
-            })
-            customFixMarker.addTo(map);
+                icon: L.divIcon({ className: 'custom-fix', html: `<div class="custom-fix-inner">${name}</div>` })
+            }).addTo(map);
         }
 
         function addCustomFixAndSave() {
@@ -891,7 +904,7 @@
                     customFixMap = {};
                 }
 
-                for(var name in customFixMap) {
+                for (var name in customFixMap) {
                     addCustomFix(name, customFixMap[name].latitude, customFixMap[name].longitude);
                 }
             });
