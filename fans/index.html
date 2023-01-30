@@ -119,8 +119,12 @@
                             data-bs-target="#metar">METAR</button>
                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                             data-bs-target="#option">OPTION</button>
+                    </div>
+                    <div class="m-2">
                         <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
                             data-bs-target="#radial">RADIAL/DME</button>
+                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                            data-bs-target="#sidstar">SID/STAR</button>
                     </div>
                     <div class="m-2">
                         <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
@@ -182,7 +186,7 @@
                 <option value="1016">1016 (30.00)</option>
                 <option value="1015">1015 (29.97)</option>
                 <option value="1014">1014 (29.94)</option>
-                <option value="1013" selected>1013 (29.91)</option>
+                <option value="1013" selected>STD 1013 (29.92)</option>
                 <option value="1012">1012 (29.88)</option>
                 <option value="1011">1011 (29.85)</option>
                 <option value="1010">1010 (29.83)</option>
@@ -343,6 +347,26 @@
         </div>
     </div>
 
+    <!-- SID/STAR Modal -->
+    <div class="modal fade" id="sidstar" tabindex="-1" aria-labelledby="sidstarModalLabel" aria-hidden="true"
+        style="z-index: 10000">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="sidstarModalLabel">SELECT SID/STAR/APPROACH</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select id="sidstarSelect" style="font-size: 9pt"></select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete All</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Draw!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Privacy Modal -->
     <div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true"
         style="z-index: 10000">
@@ -431,6 +455,7 @@
         var fixToCoordMap = {};
         var airwayUsedFix = {};
         var drawnRadialList = [];
+        var drawnProcedureList = [];
 
         function getIndicatedAltitude(mb, qnh) {
             return 145366.45 * (Math.pow(qnh / 1013.25, 0.190284) - Math.pow(mb / 1013.25, 0.190284))
@@ -767,20 +792,14 @@
         }
 
         function drawRadial() {
-            window.navaidList.every(e => {
-                if (e.name == $("#radialNavaid").val()) {
-                    var circle = L.circle([convertMinutesToDecimal(e.latitude), convertMinutesToDecimal(e.longitude)], { radius: $("#radialDistance").val() * 1852, fill: false }).addTo(map);
+            var e = window.navaidMap[$("#radialNavaid").val()];
 
-                    var latLng = calculateLatLongByBearingDistance(convertMinutesToDecimal(e.latitude), convertMinutesToDecimal(e.longitude), +$("#radialRadial").val() + +$("#magneticVariation").val(), $("#radialDistance").val() * 3);
-                    var line = L.polyline([[convertMinutesToDecimal(e.latitude), convertMinutesToDecimal(e.longitude)], latLng], { weight: 4 }).addTo(map);
+            var circle = L.circle([convertMinutesToDecimal(e.latitude), convertMinutesToDecimal(e.longitude)], { radius: $("#radialDistance").val() * 1852, fill: false }).addTo(map);
 
-                    drawnRadialList.push([circle, line]);
+            var latLng = calculateLatLongByBearingDistance(convertMinutesToDecimal(e.latitude), convertMinutesToDecimal(e.longitude), +$("#radialRadial").val() + +$("#magneticVariation").val(), $("#radialDistance").val() * 3);
+            var line = L.polyline([[convertMinutesToDecimal(e.latitude), convertMinutesToDecimal(e.longitude)], latLng], { weight: 4 }).addTo(map);
 
-                    return false;
-                }
-
-                return true;
-            });
+            drawnRadialList.push([circle, line]);
         }
 
         function deleteAllRadial() {
@@ -790,6 +809,47 @@
             });
 
             drawnRadialList = [];
+        }
+
+        function drawProcedure() {
+            var selectedProcedure = window.procedureList[$("#sidstarSelect").val()];
+
+            for (var a = 0; a < selectedProcedure.fixList.length - 1; a++) {
+                var e1, e2;
+
+                if (selectedProcedure.fixList[a].length > 10) {
+                    e1 = {
+                        latitude: selectedProcedure.fixList[a].split(" ")[0],
+                        longitude: selectedProcedure.fixList[a].split(" ")[1]
+                    }
+                }
+                else {
+                    e1 = window.navaidMap[selectedProcedure.fixList[a]];
+                }
+
+                if (selectedProcedure.fixList[a + 1].length > 10) {
+                    e2 = {
+                        latitude: selectedProcedure.fixList[a + 1].split(" ")[0],
+                        longitude: selectedProcedure.fixList[a + 1].split(" ")[1]
+                    }
+                }
+                else {
+                    e2 = window.navaidMap[selectedProcedure.fixList[a + 1]];
+                }
+
+                var latLng1 = [convertMinutesToDecimal(e1.latitude), convertMinutesToDecimal(e1.longitude)];
+                var latLng2 = [convertMinutesToDecimal(e2.latitude), convertMinutesToDecimal(e2.longitude)];
+                var line = L.polyline([latLng1, latLng2], { weight: 4 }).addTo(map);
+                drawnProcedureList.push(line);
+            }
+        }
+
+        function deleteAllProcedure() {
+            drawnProcedureList.forEach(e => {
+                map.removeLayer(e);
+            });
+
+            drawnProcedureList = [];
         }
 
         function init() {
@@ -848,9 +908,45 @@
 
             // event handler
             $.getJSON('database/navaid.json', function (ret) {
-                window.navaidList = ret;
+                window.navaidMap = {};
+                ret.forEach(e => {
+                    window.navaidMap[e.name] = e;
+                });
                 $("#radial").find("button.btn-success").on('click', drawRadial);
                 $("#radial").find("button.btn-danger").on('click', deleteAllRadial);
+            });
+
+            // event handler
+            $.getJSON('database/procedure.json', function (ret) {
+                ret.sort((a, b) => {
+                    if (a.airport < b.airport)
+                        return -1;
+                    if (a.airport > b.airport)
+                        return 1;
+                    if (a.procedureType < b.procedureType)
+                        return -1;
+                    if (a.procedureType > b.procedureType)
+                        return 1;
+                    if (a.name < b.name)
+                        return -1;
+                    if (a.name > b.name)
+                        return 1;
+
+                    return 0;
+                });
+
+                window.procedureList = {};
+                ret.forEach(e => {
+                    window.procedureList[e.name] = e;
+                    var $option = $("<option></option>");
+                    $option.attr("value", e.name);
+                    $option.text(`${e.airport}-${e.procedureType}-${e.name}`);
+                    $option.appendTo("#sidstarSelect");
+                });
+
+                $("#sidstarSelect").val("BULTI2T");
+                $("#sidstar").find("button.btn-success").on('click', drawProcedure);
+                $("#sidstar").find("button.btn-danger").on('click', deleteAllProcedure);
             });
         }
 
