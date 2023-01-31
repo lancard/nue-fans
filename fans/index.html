@@ -111,6 +111,17 @@
             font-weight: bold;
             text-shadow: 2px 2px 3px green;
         }
+
+        .record-indicator {
+            position: absolute;
+            z-index: 1000;
+            font-size: 5vw;
+            bottom: 55px;
+            left: 2vw;
+            color: blue;
+            font-weight: bold;
+            text-shadow: 2px 2px 3px cornflowerblue;
+        }
     </style>
 </head>
 
@@ -129,6 +140,7 @@
                             data-bs-target="#metar">METAR</button>
                         <button type="button" class="btn btn-sm p-1 btn-warning" data-bs-toggle="modal"
                             data-bs-target="#option">OPTION</button>
+                        <button type="button" class="btn btn-sm p-1 btn-danger" onclick='$(".record-indicator").toggle();'>REC ●</button>
                     </div>
                     <div class="m-2">
                         <button type="button" class="btn btn-sm p-1 btn-info" data-bs-toggle="modal"
@@ -155,6 +167,7 @@
         <div class="speed-indicator"><strong><span id="speed">---</span></strong> <small>kts(GS)</small></div>
         <div class="heading-indicator"><strong><span id="heading">---</span></strong></div>
         <div class="altitude-indicator"><strong><span id="altitude">---</span></strong> <small>ft</small></div>
+        <div class="record-indicator collapse"><strong><span id="record">RECORDING...</span></strong></div>
 
         <div class="altitude-panel">
             <div><small>ALT(GPS): <strong><span id="gpsAltitude">99999</span></strong> ft</small></div>
@@ -551,20 +564,43 @@
             }
         }
 
-        function readFile(filename, callback) {
-            window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory + 'download/' + filename, function (fileEntry) {
-                fileEntry.file(function (file) {
-                    var reader = new FileReader();
-                    reader.onloadend = function (e) {
-                        try {
-                            callback(this.result);
-                        } catch (e) {
-                            console.dir(e);
-                        }
-                    }
-                    reader.readAsText(file);
+        function appendFile(filename, contents) {
+            try {
+                window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory + 'download/', function (dir) {
+                    dir.getFile(filename, { create: true }, function (file) {
+                        file.createWriter(function (fileWriter) {
+                            fileWriter.seek(fileWriter.length);
+                            var blob = new Blob([contents], { type: "text/plain" });
+                            fileWriter.write(blob);
+                        });
+                    });
                 });
-            });
+            }
+            catch (e) {
+                console.dir(e);
+            }
+        }
+
+        function readFile(filename, callback) {
+            try {
+                window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory + 'download/' + filename, function (fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+                        reader.onloadend = function (e) {
+                            try {
+                                callback(this.result);
+                            } catch (e) {
+                                console.dir(e);
+                            }
+                        }
+                        reader.readAsText(file);
+                    });
+                });
+            }
+            catch (e) {
+                console.dir(e);
+                return "";
+            }
         }
 
         function getIndicatedAltitude(mb, qnh) {
@@ -625,6 +661,9 @@
             }
 
             updateStatusBar();
+
+            // log current position
+
         }
 
         function success(position) {
