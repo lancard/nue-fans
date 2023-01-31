@@ -663,7 +663,9 @@
             updateStatusBar();
 
             // log current position
-
+            if($(".record-indicator").is(":visible")) {
+                appendFile("nuefans-postion-log.txt", `${dayjs().format("YYYY-MM-DD HH:mm:ss")},${position.coords.latitude},${position.coords.longitude},${position.coords.altitude},${position.coords.speed},${position.coords.heading}`);
+            }
         }
 
         function success(position) {
