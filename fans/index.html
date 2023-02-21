@@ -58,13 +58,10 @@
         }
 
         .airplane-icon-inner {
+            margin-left: -6px;
+            margin-top: -7px;
             width: 26px;
             height: 26px;
-            margin-left: -9px;
-            margin-top: -6px;
-            font-size: 20px;
-            color: red;
-            -webkit-text-stroke: 1px white;
         }
 
         .altitude-panel {
@@ -653,7 +650,7 @@
             if (map == null)
                 return;
 
-            currentLocationMarker.setLatLng([position.coords.latitude, position.coords.longitude]).setRotationAngle(position.coords.heading - 90);
+            currentLocationMarker.setLatLng([position.coords.latitude, position.coords.longitude]).setRotationAngle(position.coords.heading);
             currentLocationAccuracyCircle.setLatLng([position.coords.latitude, position.coords.longitude]).setRadius(position.coords.accuracy);
 
 
@@ -859,7 +856,7 @@
             currentLocationMarker = L.marker([37.55748666666666, 126.79195416666667], {
                 rotationAngle: 45,
                 rotationOrigin: 'center',
-                icon: L.divIcon({ className: 'airplane-icon', html: '<div class="airplane-icon-inner">\u2708</div>' })
+                icon: L.divIcon({ className: 'airplane-icon', html: '<div class="airplane-icon-inner"><img src="images/airplane.svg"></div>' })
             })
             currentLocationMarker.addTo(map);
 
