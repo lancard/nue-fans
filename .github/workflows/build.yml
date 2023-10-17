@@ -19,9 +19,6 @@ jobs:
       - name: generate version file
         run: echo "${{ env.VERSION_STRING }}" > fans/version.txt
       
-      - name: submodule update (tiles)
-        run: git submodule update --init --recursive --remote
-       
       - name: remove unnecessary files
         run: cd fans/tiles && rm -rf README.md .git .github
       
