@@ -975,11 +975,11 @@
                 var metarList = "";
                 for (var airport in ret) {
                     if (airport == "RKSS") {
-                        var metarObject = metarParser(ret[airport].metar);
+                        var metarObject = metarParser(ret[airport]);
                         $("#airportQNH").text(metarObject.altimeter.millibars);
                         $("#airportQNH").parents("div").show();
                     }
-                    metarList += `${airport}: ${ret[airport].metar}\n`;
+                    metarList += `${airport}: ${ret[airport]}\n`;
                 }
                 localStorage.setItem("metar", metarList);
                 updateMetarFromLocalStroage();
