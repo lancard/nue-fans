@@ -624,6 +624,7 @@
             init();
 
             sensors.enableSensor("PRESSURE");
+            alert(AdvancedGeolocation);
 
             setInterval(function () { sensors.getState(onSuccess, onError) }, 1000);
         }, false);
