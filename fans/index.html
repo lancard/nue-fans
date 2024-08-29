@@ -620,11 +620,26 @@
             sensors.enableSensor("PRESSURE");
         };
 
+        function onGPSData(data) {
+            var gpsData = JSON.parse(data);
+            console.log(gpsData);
+        }
+
         document.addEventListener("deviceready", function () {
             init();
 
             sensors.enableSensor("PRESSURE");
-            alert(AdvancedGeolocation);
+            AdvancedGeolocation.start(onGPSData, {
+                "minTime":500,         // Min time interval between updates (ms)
+                "minDistance":1,       // Min distance between updates (meters)
+                "noWarn":true,         // Native location provider warnings
+                "providers":"gps",     // Return GPS, NETWORK and CELL locations
+                "useCache":true,       // Return GPS and NETWORK cached locations
+                "satelliteData":false, // Return of GPS satellite info
+                "buffer":false,        // Buffer location data
+                "bufferSize":0,        // Max elements in buffer
+                "signalStrength":false // Return cell signal strength data
+            });
 
             setInterval(function () { sensors.getState(onSuccess, onError) }, 1000);
         }, false);
